@@ -1,0 +1,26 @@
+{
+  "name": "yasmf/festiplan",
+  "config": {
+    "vendor-dir": "festiplan/lib/vendor"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/the-yasmf-project/yasmf"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "controleurs\\": "festiplan/controleurs",
+      "modeles\\": "festiplan/modeles",
+      "application\\": "festiplan/application"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "phpunit/phpunit": "10.0.*",
+    "phpstan/phpstan": "1.10.*",
+    "ext-pdo": "*",
+    "yasmf/yasmf": ">=1.6.1"
+  }
+}
