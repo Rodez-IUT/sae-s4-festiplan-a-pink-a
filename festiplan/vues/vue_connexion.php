@@ -7,26 +7,28 @@ if (isset($_SESSION['utilisateur_connecte'])) {
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8">
     <title>Page de Connexion</title>
-    <link href="festiplan/static/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="festiplan/static/css/index.css"/>
-    <link href="festiplan/static/fontawesome-free-6.2.1-web/css/all.min.css" rel="stylesheet">
+    <link href="static/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/index.css" />
+    <link href="static/fontawesome-free-6.2.1-web/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container centreVertical">
         <div class="cadreUtilisateur connexion">
             <form action="index.php" method="post">
-                <img src="festiplan/static/images/logo_blanc.png" alt="Festiplan Logo">
+                <img src="static/images/logo_blanc.png" alt="Festiplan Logo">
                 <br><br>
                 <h2 class="grand">Connexion</h2>
                 <br>
                 <?php
-                    echo (!$loginOuMdpOk) ? '<p id="invalide">Erreur : Le mot de passe ou le login est invalide.</p>' : '';
+                echo (!$loginOuMdpOk) ? '<p id="invalide">Erreur : Le mot de passe ou le login est invalide.</p>' : '';
                 ?>
                 <br>
-                
+
                 <input type="hidden" name="controller" value="UtilisateurCompte">
                 <input type="hidden" name="action" value="connexion">
 
@@ -54,12 +56,15 @@ if (isset($_SESSION['utilisateur_connecte'])) {
                 -->
                 <br><br>
                 <div class="texteCentre">
-                    <button type="submit" class="btn btn-primary boutonFleche"><span class="fas fa-arrow-right"></span></button>
+                    <button type="submit" class="btn btn-primary boutonFleche"><span
+                            class="fas fa-arrow-right"></span></button>
                 </div>
                 <br><br>
             </form>
-            <p class="petit">Vous n'avez pas de compte ?  <a class="petit" href="?controller=UtilisateurCompte&action=pageInscription">CREER UN COMPTE</a></p>
+            <p class="petit">Vous n'avez pas de compte ? <a class="petit"
+                    href="?controller=UtilisateurCompte&action=pageInscription">CREER UN COMPTE</a></p>
         </div>
     </div>
 </body>
+
 </html>

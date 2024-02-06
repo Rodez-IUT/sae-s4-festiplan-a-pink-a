@@ -6,19 +6,20 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8">
     <title>Desinscription</title>
-    <link href="festiplan/static/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="festiplan/static/css/index.css"/>
-    <link href="festiplan/static/fontawesome-free-6.2.1-web/css/all.min.css" rel="stylesheet">
+    <link href="static/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/index.css" />
+    <link href="static/fontawesome-free-6.2.1-web/css/all.min.css" rel="stylesheet">
 </head>
 <header>
     <div class="container-fluid header-blanc">
         <div class="row">
             <div class="col-3 col-md-2">
                 <a href="index.php">
-                    <img src="festiplan/static/images/logo_blanc.png" alt="Logo Festiplan" class="logo-festiplan">
+                    <img src="static/images/logo_blanc.png" alt="Logo Festiplan" class="logo-festiplan">
                 </a>
             </div>
             <div class="offset-8 col-1 col-md-2 text-right"> <!-- Ajoutez la classe text-right pour aligner à droite -->
@@ -36,6 +37,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         </div>
     </div>
 </header>
+
 <body>
     <div class="container">
         <div class="cadreUtilisateur connexion">
@@ -50,8 +52,9 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 
                 <div class="form-group texteGauche">
                     <div class="input-group">
-                        <input name="login" type="text" class="form-control <?php echo (!$loginOk) ? 'placeholder-invalid' : ''; ?>" 
-                            placeholder="<?php echo (!$loginOk) ? 'Login invalide !' : 'LOGIN'; ?>"  required>
+                        <input name="login" type="text"
+                            class="form-control <?php echo (!$loginOk) ? 'placeholder-invalid' : ''; ?>"
+                            placeholder="<?php echo (!$loginOk) ? 'Login invalide !' : 'LOGIN'; ?>" required>
                         <div class="input-group-append">
                             <span class="input-group-text"><span class="fas fa-solid fa-user"></span></span>
                         </div>
@@ -59,18 +62,22 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 </div>
                 <div class="form-group texteGauche">
                     <div class="input-group">
-                        <input name="mdp" type="password" class="form-control <?php echo (!$mdpOk) ? 'placeholder-invalid' : ''; ?>" 
-                            placeholder="<?php echo (!$mdpOk) ? 'Mot de passe invalide !' : 'MOT DE PASSE'; ?>" required>
+                        <input name="mdp" type="password"
+                            class="form-control <?php echo (!$mdpOk) ? 'placeholder-invalid' : ''; ?>"
+                            placeholder="<?php echo (!$mdpOk) ? 'Mot de passe invalide !' : 'MOT DE PASSE'; ?>"
+                            required>
                         <div class="input-group-append">
                             <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>
                         </div>
                     </div>
-                <br><br>
-                <div class="texteCentre">
-                    <button type="submit" class="btn btn-danger fondRouge boutonTerminer">Se désinscrire</button></a>
-                </div>
+                    <br><br>
+                    <div class="texteCentre">
+                        <button type="submit" class="btn btn-danger fondRouge boutonTerminer">Se
+                            désinscrire</button></a>
+                    </div>
             </form>
         </div>
     </div>
 </body>
+
 </html>
