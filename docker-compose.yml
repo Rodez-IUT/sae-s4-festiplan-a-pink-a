@@ -28,6 +28,3 @@ services:
         working_dir: /pma/
         environment:
             - PMA_HOST=SAE_S3_DevWeb_db
-            - PMA_PORT=3306
-        ports:
-            - 8888:80
