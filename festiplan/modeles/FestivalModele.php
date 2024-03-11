@@ -3,6 +3,7 @@
 namespace modeles;
 
 use PDOException;
+use PDOStatement;
 use PDO;
 
 class FestivalModele
@@ -133,10 +134,10 @@ class FestivalModele
      * @param categorie categorie du festival.
      * @param illustration illustration du festival.
      * @param idFestival l'id de l'utilisateur courant.
-     * @return stmt true si cela a marché
+     * @return boolean en fonction de la réussite de la transaction
      */
     public function modificationFestival(PDO $pdo, $nom, $description, $dateDebut, $dateFin, $categorie, $illustration, $idFestival)
-    {   
+    {
         try {
             // Début de la transaction
             $pdo->beginTransaction();
@@ -152,10 +153,11 @@ class FestivalModele
             $stmt->execute();
             // Valider la transaction
             $pdo->commit();
+            return true;
         } catch (PDOException $e) {
             // En cas d'erreur, annuler la transaction
             $pdo->rollBack();
-            echo "Erreur : " . $e->getMessage();
+            return false;
         }
     }
 

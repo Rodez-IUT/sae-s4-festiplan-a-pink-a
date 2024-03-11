@@ -4,6 +4,7 @@ namespace modeles;
 
 use PDOException;
 use PDO;
+use PHPUnit\Exception;
 
 class SpectacleModele 
 {
@@ -44,12 +45,15 @@ class SpectacleModele
      * @param illustration image du spectacle
      * @param categorie du spectacle
      * @param taille de la scène dont le spectacle à besoin
-     * @return searchStmt
+     * @return boolean en fonction de la réussite de la transaction
      */
     public function insertionspectacle(PDO $pdo, $titre, $description, $duree, $illustration, $categorie, $taille, $idUtilisateur)
     {   
         try {
-            $sql = "INSERT INTO Spectacle (titre,description,duree,illustration,categorie,tailleSceneRequise) VALUES (:leTitre,:laDesc,:leTemps,:illu,:laCate,:tailleScene)";
+            $pdo -> beginTransaction();
+            $sql =
+                "INSERT INTO Spectacle (titre,description,duree,illustration,categorie,tailleSceneRequise) 
+                VALUES (:leTitre,:laDesc,:leTemps,:illu,:laCate,:tailleScene)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam("leTitre",$titre);
             $stmt->bindParam("laDesc",$description);
@@ -65,8 +69,11 @@ class SpectacleModele
             $stmt2->bindParam("idOrg",$idUtilisateur);
             $stmt2->bindParam("idSpectacle",$idSpectacle);
             $stmt2->execute();
+            $pdo -> commit();
+            return true;
         } catch (PDOException $e) {
-            
+            $pdo -> rollBack();
+            return false;
         }
     }
 
@@ -195,22 +202,26 @@ class SpectacleModele
      * @param mail pour récuperer le mail de l'intervenant
      * @param surScene boolean pour savoir si l'intervenant est sur ou hors scene
      * @param typeIntervenant pour récupérer le métier de l'intervenant
-     * @return stmt qui insert les données dans la table intervenant 
+     * @return boolean en fonction de la réussite de la transaction
      */
     public function insertionIntervenant(PDO $pdo, $idSpectacle, $nom, $prenom, $mail, $surScene, $typeIntervenant)
     {
         try {
-        $sql = "INSERT INTO Intervenant (idSpectacle,nom,prenom,mail,surScene,typeIntervenant) VALUES (:leIdSpectacle,:leNom,:lePrenom,:leMail,:surScene,:typeIntervenant)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam("leIdSpectacle",$idSpectacle);
-        $stmt->bindParam("leNom",$nom);
-        $stmt->bindParam("lePrenom",$prenom);
-        $stmt->bindParam("leMail",$mail);
-        $stmt->bindParam("surScene",$surScene);
-        $stmt->bindParam("typeIntervenant",$typeIntervenant);
-        $stmt->execute();
+            $pdo -> beginTransaction();
+            $sql = "INSERT INTO Intervenant (idSpectacle,nom,prenom,mail,surScene,typeIntervenant) VALUES (:leIdSpectacle,:leNom,:lePrenom,:leMail,:surScene,:typeIntervenant)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam("leIdSpectacle",$idSpectacle);
+            $stmt->bindParam("leNom",$nom);
+            $stmt->bindParam("lePrenom",$prenom);
+            $stmt->bindParam("leMail",$mail);
+            $stmt->bindParam("surScene",$surScene);
+            $stmt->bindParam("typeIntervenant",$typeIntervenant);
+            $stmt->execute();
+            $pdo ->commit();
+            return true;
         } catch (PDOException $e) {
-            
+            $pdo -> rollBack();
+            return false;
         }
     }
 
@@ -248,20 +259,28 @@ class SpectacleModele
      * @param illustration image du spectacle
      * @param categorie du spectacle
      * @param taille de la scène dont le spectacle à besoin
-     * @return searchStmt
+     * @return boolean en fonction de la réussite de la transaction
      */
     public function modifspectacle(PDO $pdo, $titre, $description, $duree, $illustration, $categorie, $taille, $idSpectacle)
     {
-        $sql = "UPDATE Spectacle SET titre = :leTitre, description = :laDesc, duree = :leTemps, illustration = :illu, categorie = :laCate, tailleSceneRequise = :tailleScene WHERE idSpectacle = :idSpectacle";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam("leTitre", $titre);
-        $stmt->bindParam("laDesc", $description);
-        $stmt->bindParam("leTemps", $duree);
-        $stmt->bindParam("illu", $illustration);
-        $stmt->bindParam("laCate", $categorie);
-        $stmt->bindParam("tailleScene", $taille);
-        $stmt->bindParam("idSpectacle", $idSpectacle);
-        $stmt->execute();
+        try {
+            $pdo -> beginTransaction();
+            $sql = "UPDATE Spectacle SET titre = :leTitre, description = :laDesc, duree = :leTemps, illustration = :illu, categorie = :laCate, tailleSceneRequise = :tailleScene WHERE idSpectacle = :idSpectacle";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam("leTitre", $titre);
+            $stmt->bindParam("laDesc", $description);
+            $stmt->bindParam("leTemps", $duree);
+            $stmt->bindParam("illu", $illustration);
+            $stmt->bindParam("laCate", $categorie);
+            $stmt->bindParam("tailleScene", $taille);
+            $stmt->bindParam("idSpectacle", $idSpectacle);
+            $stmt->execute();
+            $pdo ->commit();
+            return true;
+        } catch (PDOException $e) {
+            $pdo -> rollBack();
+            return false;
+        }
     }
 
     /**
@@ -272,19 +291,27 @@ class SpectacleModele
      * @param mail de l'intervenant du spectacle
      * @param metier de l'intervenant du spectacle
      * @param surScne si l'intervenant sur ou hors Scene
-     * @return searchStmt
+     * @return boolean en fonction de la réussite de la transaction
      */
     public function modifIntervenant(PDO $pdo, $nom, $prenom, $mail, $surScene, $typeIntervenant, $idIntervenant)
     {
-        $sql = "UPDATE Intervenant SET nom = :leNom, prenom = :lePrenom, mail = :leMail, surScene = :surScene, typeIntervenant = :leMetier WHERE idIntervenant = :idIntervenant";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam("leNom", $nom);
-        $stmt->bindParam("lePrenom", $prenom);
-        $stmt->bindParam("leMail", $mail);
-        $stmt->bindParam("surScene", $surScene);
-        $stmt->bindParam("leMetier", $typeIntervenant);
-        $stmt->bindParam("idIntervenant", $idIntervenant);
-        $stmt->execute();
+        try {
+            $pdo -> beginTransaction();
+            $sql = "UPDATE Intervenant SET nom = :leNom, prenom = :lePrenom, mail = :leMail, surScene = :surScene, typeIntervenant = :leMetier WHERE idIntervenant = :idIntervenant";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam("leNom", $nom);
+            $stmt->bindParam("lePrenom", $prenom);
+            $stmt->bindParam("leMail", $mail);
+            $stmt->bindParam("surScene", $surScene);
+            $stmt->bindParam("leMetier", $typeIntervenant);
+            $stmt->bindParam("idIntervenant", $idIntervenant);
+            $stmt->execute();
+            $pdo ->commit();
+            return true;
+        } catch (PDOException $e) {
+            $pdo -> rollBack();
+            return false;
+        }
     }
 
     /**

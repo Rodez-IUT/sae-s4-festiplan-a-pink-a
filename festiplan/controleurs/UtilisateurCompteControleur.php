@@ -6,6 +6,7 @@ use modeles\UserModele;
 use modeles\SpectacleModele;
 use modeles\FestivalModele;
 use PDO;
+use PDOException;
 use yasmf\HttpHelper;
 use yasmf\View;
 

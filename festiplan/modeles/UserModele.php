@@ -152,7 +152,7 @@ class UserModele
         $deleteStmtDix = $pdo->prepare($sqlDix);
         $deleteStmtDix->execute([$idUtilisateur]);
     
-        return ($deleteStmtUn && $deleteStmtDeux && $deleteStmtTrois && $deleteStmtQuatre && $deleteStmtCinq && $deleteStmtSix && $deleteStmtSept && $deleteStmtHuit && $deleteStmtNeuf && $deleteStmtDix);
+        return ($deleteStmtUn && $deleteStmtDeux && $deleteStmtQuatre && $deleteStmtCinq && $deleteStmtSix && $deleteStmtHuit && $deleteStmtNeuf && $deleteStmtDix);
     }
     
     
