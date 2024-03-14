@@ -205,9 +205,9 @@ class FestivalControleur {
 
 
     /**
-     * Ajout a YASMF
+     * Récupère un array depuis les paramètres
      * @param string $name the name of the param
-     * @return string|null the value of the param if defined, null otherwise
+     * @return array|null the value of the param if defined, null otherwise
      */
     public static function getParamArray(string $name): ?array {
         if (isset($_GET[$name])) return $_GET[$name];
@@ -266,7 +266,7 @@ class FestivalControleur {
         // On Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
 
-        $nbSpectacles = (int)$this->spectacleModele->nombreSpectacles($pdo,$recherche);
+        $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
         // Calcul du 1er element de la page
@@ -289,13 +289,13 @@ class FestivalControleur {
         // Récupere le spectacle check
         $idSpectacle = HttpHelper::getParam('spectacle');
         // On récupere sur quelle page on se trouve
-        $pageActuelle =  HttpHelper::getParam('pageActuelle');
+        $pageActuelle = (int) HttpHelper::getParam('pageActuelle');
         // Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
         // Ajoute le nouveau spectacle
         $this->festivalModele->majSpectacleDeFestival($pdo,$idFestival,$idSpectacle);
 
-        $nbSpectacles = (int)$this->spectacleModele->nombreSpectacles($pdo,$recherche);
+        $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
         // Calcul du 1er element de la page
@@ -318,13 +318,13 @@ class FestivalControleur {
         // Récupere le spectacle checks
         $idSpectacle = HttpHelper::getParam('spectacle');
         // On récupere sur quelle page on se trouve
-        $pageActuelle =  HttpHelper::getParam('pageActuelle');
+        $pageActuelle = (int) HttpHelper::getParam('pageActuelle');
         // Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
 
         // Supprime le spectacle
         $this->festivalModele->supprimerSpectacleDeFestival($pdo,$idFestival,$idSpectacle);
-        $nbSpectacles = (int)$this->spectacleModele->nombreSpectacles($pdo,$recherche);
+        $nbSpectacles = (int) $this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
         // Calcul du 1er element de la page
@@ -347,7 +347,7 @@ class FestivalControleur {
         // On récupere sur quelle page on se trouve
         $recherche =  HttpHelper::getParam('recherche');
 
-        $nbSpectacles = (int)$this->spectacleModele->nombreSpectacles($pdo,$recherche);
+        $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
         // Calcul du 1er element de la page

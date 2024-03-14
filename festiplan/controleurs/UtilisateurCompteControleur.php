@@ -134,9 +134,11 @@ class UtilisateurCompteControleur
         $verifConfirmMdp = true;
         $verifEmail = true;
         $verifAncienMdp = true;
+
         session_start();
         $utilisateur = $this->userModele->recupererInformationsProfil($pdo, $_SESSION['id_utilisateur']);
         $utilisateur = $utilisateur->fetch();
+
         $vue = new View("vues/vue_modifier_profil");
         $vue->setVar("nomOk", $verifNom);
         $vue->setVar("ancienNom", $utilisateur['nom']);

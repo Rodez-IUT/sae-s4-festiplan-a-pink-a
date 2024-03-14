@@ -4,6 +4,7 @@ namespace modeles;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 
 /**
  * class GrijModele
@@ -14,15 +15,15 @@ class GrijModele
     /**
      * Modifie ou crée une grij pour un festival sélectionné et génére des jours qui seront remplis par les
      * spectacles dans une autre méthodes.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on modifie la grij.
-     * @param heureDebut L'heure de début sélectionnée par l'utilisateur lors du paramétrage de la grij.
-     * @param heureFin L'heure de fin sélectionnée par l'utilisateur lors du paramétrage de la grij.
-     * @param ecartEntreSpectacle L'écart entre chaque spéctacle entré par l'utilisateur lors du paramétrage
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on modifie la grij.
+     * @param string $heureDebut L'heure de début sélectionnée par l'utilisateur lors du paramétrage de la grij.
+     * @param string $heureFin L'heure de fin sélectionnée par l'utilisateur lors du paramétrage de la grij.
+     * @param string $ecartEntreSpectacles L'écart entre chaque spéctacle entré par l'utilisateur lors du paramétrage
      * de la grij. Cette écart temporelle séparera les spectacles dans une journé.
-     * @return true si l'opération à fonctionné, false sinon.
+     * @return boolean true si l'opération à fonctionné, false sinon.
      */
-    public function modifierCreerGrij(PDO $pdo, $idFestival, $heureDebut, $heureFin, $ecartEntreSpectacles)
+    public function modifierCreerGrij(PDO $pdo, int $idFestival, string $heureDebut, string $heureFin, string $ecartEntreSpectacles)
     {
         try {
             // Début de la transaction
@@ -83,12 +84,12 @@ class GrijModele
     /**
      * Récupère l'heure de début, l'heure de fin et le temps d'écart entre chaque
      * spectacle relative à la grij.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on récupère des information.
-     * @return stmt Le résultat de la requête. Contient les informtions spécifique
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on récupère des information.
+     * @return PDOStatement Le résultat de la requête. Contient les informtions spécifique
      * à la grij.
      */
-    public function recupererParametresGrij(PDO $pdo, $idFestival)
+    public function recupererParametresGrij(PDO $pdo, int $idFestival) :PDOStatement
     {
         $sql = "SELECT heureDebut, heureFin, tempsEntreSpectacle FROM Grij WHERE idGrij = ?";
         $stmt = $pdo->prepare($sql);
@@ -98,12 +99,12 @@ class GrijModele
 
     /**
      * Récupère les données relatives aux jours d'un festival.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on récupère des informations.
-     * @return stmt Contient le résultat de la requête contenant les informations
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on récupère des informations.
+     * @return PDOStatement Contient le résultat de la requête contenant les informations
      * relatives aux jours du festival.
      */
-    public function recupererJours(PDO $pdo, $idFestival)
+    public function recupererJours(PDO $pdo, int $idFestival) :PDOStatement
     {
         $sql = "SELECT * FROM Jour WHERE idGrij = ?";
         $stmt = $pdo->prepare($sql);
@@ -113,9 +114,9 @@ class GrijModele
 
     /**
      * Récupère les spectacles d'un festival.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on veut récupérer des informations.
-     * @return stmt Le résultat de la requête.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on veut récupérer des informations.
+     * @return PDOStatement Le résultat de la requête.
      */
     public function recupererSpectacles(PDO $pdo, $idFestival)
     {
@@ -133,18 +134,19 @@ class GrijModele
     /**
      * Insert un spectacle dans un jour à une heure précise dans un ordre précis.
      * Si le paramètre "place" est égal à 0 alors le spectacle n'est pas placé.  
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on insert le spectacle dans la planification.
-     * @param idJour L'id du jour où on ajoute un spectacle.
-     * @param idSpectacle L'id du spectacle qu'on ajoute dans la planification.
-     * @param ordre Le numero de la place qu'occupe le spectacle dans la journé.
-     * @param place Indique si le spectacle est placé ou non dans la planification.
-     * @param heureDebut L'heure de début du spectacle dans la journé.
-     * @param heureFin L'heure de fin du spectacle dans la journé.
-     * @param causeNonPlace Si le spectacle n'est pas placé alors cette valeur indique
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on insert le spectacle dans la planification.
+     * @param int $idJour L'id du jour où on ajoute un spectacle.
+     * @param int $idSpectacle L'id du spectacle qu'on ajoute dans la planification.
+     * @param int $ordre Le numero de la place qu'occupe le spectacle dans la journé.
+     * @param bool $place Indique si le spectacle est placé ou non dans la planification.
+     * @param string $heureDebut L'heure de début du spectacle dans la journé.
+     * @param string $heureFin L'heure de fin du spectacle dans la journé.
+     * @param string $causeNonPlace Si le spectacle n'est pas placé alors cette valeur indique
      * pour qu'elle raison il n'est pas placé.
      */
-    public function insertSpectaclesParJour(PDO $pdo,$idFestival, $idJour, $idSpectacle, $ordre, $place, $heureDebut, $heureFin, $causeNonPlace)
+    public function insertSpectaclesParJour(PDO $pdo,$idFestival, int $idJour, int $idSpectacle, int $ordre, bool $place,
+                                            string $heureDebut, string $heureFin, string $causeNonPlace)
     {
         $sql = "INSERT INTO SpectaclesJour VALUES (?,?,?,?,?,?,?,?)";
         $stmt = $pdo->prepare($sql);
@@ -154,11 +156,11 @@ class GrijModele
     /**
      * Récupère la grille de planification avec toutes les informations nécessaires
      * pour l'affichage.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on veut récupérer la planification.
-     * @return stmt Le résultat de la requête.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on veut récupérer la planification.
+     * @return PDOStatement Le résultat de la requête.
      */
-    public function recupererGrij(PDO $pdo, $idFestival)
+    public function recupererGrij(PDO $pdo, int $idFestival) : PDOStatement
     {
         $sql = "SELECT j.dateDuJour as dateJour, GROUP_CONCAT(DISTINCT s.titre ORDER BY sj.ordre) as titres, GROUP_CONCAT(DISTINCT sj.idSpectacle ORDER BY sj.ordre) as idSpectacles,
                 GROUP_CONCAT(DISTINCT sj.heureDebut) as heureDebut, GROUP_CONCAT(DISTINCT sj.heureFin) as heureFin
@@ -177,11 +179,11 @@ class GrijModele
     
     /**
      * Récupération des scènes adéquate spéciphique à la taille d'un spectacle.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param taille La taille sélectionné.
-     * @return stmt La liste des scènes correspondantes.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $taille La taille sélectionné.
+     * @return PDOStatement La liste des scènes correspondantes.
      */
-    public function recuperationSceneAdequate(PDO $pdo,$taille)
+    public function recuperationSceneAdequate(PDO $pdo, int $taille):PDOStatement
     {
         $sql = "SELECT idScene
                 FROM Scene
@@ -193,37 +195,42 @@ class GrijModele
 
     /**
      * Insert la liste des liaisons entre un spectacle et des scènes.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival concerné.
-     * @param idSpectacle L'id du spectacle dont on ajoute les scènes.
-     * @param listeScenesAdequates La liste des scènes à ajouter au spectacle.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival concerné.
+     * @param int $idSpectacle L'id du spectacle dont on ajoute les scènes.
+     * @param array $listeScenesAdequates La liste des scènes à ajouter au spectacle.
      * 
      */
-    public function insertionSpectacleScene(PDO $pdo, $idFestival, $idSpectacle, $listeScenesAdequates)
+    public function insertionSpectacleScene(PDO $pdo, int $idFestival, int $idSpectacle, array $listeScenesAdequates)
     {
-        // Suppression de la liste des scènes existante du spectacle
-        $sql = "DELETE FROM SpectacleScenes WHERE idSpectacle = ".$idSpectacle;
-        $stmt = $pdo->query($sql);
+        try {
 
-        // Ajout de la liste des scènes possibles du spectacle
-        $sql = "INSERT INTO SpectacleScenes (idSpectacle,idScene,idFestival)
-                VALUES ";
-        foreach($listeScenesAdequates as $idScene) {
-            $sql .= "(".$idSpectacle.",".$idScene['idScene'].",".$idFestival."),";
-        }
-        $sql = substr($sql,0,-1);
-        $pdo->query($sql);
+            // Suppression de la liste des scènes existante du spectacle
+            $sql = "DELETE FROM SpectacleScenes WHERE idSpectacle = " . $idSpectacle;
+            $stmt = $pdo->query($sql);
+
+            // Ajout de la liste des scènes possibles du spectacle
+            $sql = "INSERT INTO SpectacleScenes (idSpectacle,idScene,idFestival)
+                    VALUES ";
+            foreach ($listeScenesAdequates as $idScene) {
+                $sql .= "(" . $idSpectacle . "," . $idScene['idScene'] . "," . $idFestival . "),";
+            }
+            $sql = substr($sql, 0, -1);
+            $pdo->query($sql);
+        } catch (PDOException $e) {
+
+    }
     }
 
     /**
      * Récupérer la listes des scènes relativ à un spectacle d'un festival.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival contenant le spectacle.
-     * @param idSpectacle L'id du spectacle dont on récupère la liste des
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival contenant le spectacle.
+     * @param int $idSpectacle L'id du spectacle dont on récupère la liste des
      * scènes.
-     * @return stmt La liste des scènes.
+     * @return PDOStatement La liste des scènes.
      */
-    public function recupererListeScenes(PDO $pdo, $idFestival, $idSpectacle)
+    public function recupererListeScenes(PDO $pdo, int $idFestival, int $idSpectacle)
     {
         $sql = "SELECT s.nom as nomScene, s.nombreSpectateurs as nbSpectateurs, s.longitude as longitude,
                 s.latitude as latitude
@@ -241,13 +248,13 @@ class GrijModele
 
     /**
      * Récupérer le profil du spectacle à afficher sur la planification.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on récupère les informations.
-     * @param idSpectacle L'id du spectacle du festival dont on récupère les
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on récupère les informations.
+     * @param int $idSpectacle L'id du spectacle du festival dont on récupère les
      * informations.
-     * @return stmt Contient les données relatives au profil du spectacle.
+     * @return PDOStatement Contient les données relatives au profil du spectacle.
      */
-    public function recupererProfilSpectacle(PDO $pdo, $idFestival, $idSpectacle)
+    public function recupererProfilSpectacle(PDO $pdo, int $idFestival, int $idSpectacle)
     {
         $sql = "SELECT sj.heureDebut as heureDebut, sj.heureFin as heureFin, s.titre as titre, s.duree as duree
                 FROM SpectaclesJour as sj
@@ -263,12 +270,12 @@ class GrijModele
     /**
      * Récupère les spectacles qui n'ont pas été placé sur la grij suite
      * à une tentative de planification grâce aux paramétrage de la grij.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival dont on veut récupérer des
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival dont on veut récupérer des
      * informations.
-     * @return stmt La liste des spectacles non placés.
+     * @return PDOStatement La liste des spectacles non placés.
      */
-    public function recupererSpectacleNonPlace(PDO $pdo, $idFestival)
+    public function recupererSpectacleNonPlace(PDO $pdo, int $idFestival)
     {
         $sql = "SELECT s.titre as titre, s.duree as duree, c.intitule as causeNonPlace
                 FROM SpectaclesJour as sj

@@ -10,8 +10,8 @@ class FestivalModele
 {
     /**
      * Recherche la liste des categories de festival dans la base de données 
-     * @param pdo un objet PDO connecté à la base de données.
-     * @return searchStmt l'ensemble des categorie de festival
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @return PDOStatement l'ensemble des categorie de festival
      */
     public function listeCategorieFestival(PDO $pdo)
     {
@@ -23,16 +23,17 @@ class FestivalModele
 
     /**
      * Insere un festival dans la base de données
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param nom nom du festival.
-     * @param description description du festival.
-     * @param dateDebut date de debut du festival.
-     * @param dateFin date de fin du festival.
-     * @param categorie categorie du festival.
-     * @param illustration illustration du festival.
-     * @param idOrganisateur l'id de l'utilisateur courant.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param string $nom nom du festival.
+     * @param string $description description du festival.
+     * @param string $dateDebut date de debut du festival.
+     * @param string $dateFin date de fin du festival.
+     * @param string $categorie categorie du festival.
+     * @param string $illustration illustration du festival.
+     * @param int $idOrganisateur id de l'utilisateur courant.
      */
-    public function insertionFestival(PDO $pdo, $nom, $description, $dateDebut, $dateFin, $categorie, $illustration, $idOrganisateur)
+    public function insertionFestival(PDO $pdo, string $nom, string $description, string $dateDebut, string $dateFin,
+                                      string $categorie, string $illustration, int $idOrganisateur)
     {
         $sql = "INSERT INTO Festival (titre,categorie,description,dateDebut,dateFin,illustration) VALUES (:leNom,:laCate,:laDesc,:leDeb,:laFin,:lIllu)";
         $stmt = $pdo->prepare($sql);
@@ -58,9 +59,9 @@ class FestivalModele
 
     /**
      * Compte le nombre de festival de l'utilisateur
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idOrganisateur l'id de l'utilisateur courant.
-     * @return nbFestival le nombre de festivals.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idOrganisateur l'id de l'utilisateur courant.
+     * @return int le nombre de festivals.
      */
     public function nombreMesFestivals(PDO $pdo, $idOrganisateur)
     {
@@ -79,9 +80,9 @@ class FestivalModele
 
     /**
      * Recherche la liste des festivals de l'utilisateur
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idOrganisateur l'id de l'utilisateur courant.
-     * @return stmt l'ensemble des festivals.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idOrganisateur l'id de l'utilisateur courant.
+     * @return PDOStatement l'ensemble des festivals.
      */
     public function listeMesFestivals(PDO $pdo, $idOrganisateur, $premier)
     {
@@ -96,8 +97,8 @@ class FestivalModele
 
     /**
      * Recherche la liste des responsables de Festivals
-     * @param pdo un objet PDO connecté à la base de données.
-     * @return stmt l'ensemble des responsables.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @return PDOStatement l'ensemble des responsables.
      */
     public function listeLesResponsables(PDO $pdo)
     {
@@ -110,9 +111,9 @@ class FestivalModele
 
     /**
      * Recherche tout les parametre du festival voulu.
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idFestival l'id du festival a rechercher.
-     * @return fetch lefestival.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idFestival l'id du festival a rechercher.
+     * @return PDOStatement lefestival.
      */
     public function leFestival(PDO $pdo, $idFestival)
     {
@@ -126,17 +127,18 @@ class FestivalModele
 
     /**
      * Modifier un festival dans la base de données
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param nom nom du festival.
-     * @param description description du festival.
-     * @param dateDebut date de debut du festival.
-     * @param dateFin date de fin du festival.
-     * @param categorie categorie du festival.
-     * @param illustration illustration du festival.
-     * @param idFestival l'id de l'utilisateur courant.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param string $nom nom du festival.
+     * @param string $description description du festival.
+     * @param string $dateDebut date de debut du festival.
+     * @param string $dateFin date de fin du festival.
+     * @param string $categorie categorie du festival.
+     * @param string $illustration illustration du festival.
+     * @param int $idFestival l'id de l'utilisateur courant.
      * @return boolean en fonction de la réussite de la transaction
      */
-    public function modificationFestival(PDO $pdo, $nom, $description, $dateDebut, $dateFin, $categorie, $illustration, $idFestival)
+    public function modificationFestival(PDO $pdo, string $nom, string $description, string $dateDebut, string $dateFin,
+                                         string $categorie, string $illustration, int $idFestival)
     {
         try {
             // Début de la transaction
@@ -163,8 +165,8 @@ class FestivalModele
 
     /**
      * Supprime festival voulu
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idFestival l'id du festival a supprimer.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param string|null $idFestival l'id du festival a supprimer.
      */
     public function supprimerFestival(PDO $pdo, $idFestival)
     {   
@@ -180,9 +182,9 @@ class FestivalModele
 
     /**
      * Regarde si l'utilisateur et le responsable du festival voulus.
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idFestival l'id du festival.
-     * @param idOrganisateur l'id de l'organisateur.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idFestival l'id du festival.
+     * @param int $idOrganisateur l'id de l'organisateur.
      */
     public function estResponsable($pdo,$idFestival,$idOrganisateur)
     {
@@ -197,8 +199,8 @@ class FestivalModele
 
     /**
      * Renvoie la liste des organisateur du festival voulus.
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idFestival l'id du festival.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idFestival l'id du festival.
      */
     public function listeOrganisateurFestival($pdo,$idFestival) 
     {
@@ -211,7 +213,7 @@ class FestivalModele
 
     /**
      * Renvoie la liste de tout les utilisateurs
-     * @param pdo un objet PDO connecté à la base de données.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
      */
     public function listeUtilisateur($pdo) 
     {
@@ -223,8 +225,8 @@ class FestivalModele
 
     /**
      * Supprime la liste des organisateur d'un festival
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idFestival l'id du festival.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idFestival l'id du festival.
      */
     public function supprimerOrganisateurs($pdo,$idFestival) 
     {
@@ -236,7 +238,7 @@ class FestivalModele
 
     /**
      * Met a jour la liste des organisateur d'un festival
-     * @param pdo un objet PDO connecté à la base de données.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
      */
     public function majOrganisateur($pdo,$idFestival,$utilisateur) 
     {
@@ -249,7 +251,7 @@ class FestivalModele
 
     /**
      * Supprimer tout les spectacles d'un festival.
-     * @param pdo un objet PDO connecté à la base de données.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
      */
     public function supprimerSpectacleDeFestival ($pdo,$idFestival, $idSpectacle) 
     {
@@ -262,7 +264,7 @@ class FestivalModele
 
     /**
      * Met a jour la liste des spectacles d'un festival
-     * @param pdo un objet PDO connecté à la base de données.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
      */
     public function majSpectacleDeFestival ($pdo,$idFestival,$idSpectacle) 
     {
@@ -275,10 +277,10 @@ class FestivalModele
 
     /**
      * Renvoie la liste des spectacles du festival voulu
-     * @param pdo un objet PDO connecté à la base de données.
-     * @param idFestival l'id du festival.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idFestival l'id du festival.
      */
-    public function listeSpectacleDeFestival($pdo,$idFestival) 
+    public function listeSpectacleDeFestival(PDO $pdo, int $idFestival)
     {
         $sql = "SELECT idSpectacle FROM SpectacleDeFestival WHERE idFestival = :id ";
         $stmt = $pdo->prepare($sql);

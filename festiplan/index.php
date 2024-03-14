@@ -15,5 +15,5 @@ $dataSource = new DataSource(
     $charset = 'utf8mb4'
 );
 
-$router = new Router(new DefaultComponentFactory(), $dataSource);
+$router = new Router(new DefaultComponentFactory());
 $router->route(PREFIX_TO_RELATIVE_PATH, $dataSource);
