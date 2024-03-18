@@ -8,3 +8,17 @@ function sendJSON($infos, $codeRetour): void
     http_response_code($codeRetour); // Code de retour
     echo json_encode($infos, JSON_UNESCAPED_UNICODE); // Encodage de la structure au format JSON
 }
+
+function retourKO($message, $code): void
+{
+    $retour['statut'] = "KO";
+    $retour['message'] = $message;
+    sendJSON($retour, $code);
+}
+
+function retourOK($message, $code): void
+{
+    $retour['statut'] = "OK";
+    $retour['message'] = $message;
+    sendJSON($retour, $code);
+}

@@ -3,6 +3,27 @@ CREATE DATABASE IF NOT EXISTS festiplanbfgi_sae DEFAULT CHARACTER SET utf8mb4 CO
 USE festiplanbfgi_sae;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+DROP FUNCTION IF EXISTS `loginAPI`;
+DELIMITER $$
+CREATE FUNCTION `loginAPI` (loginGiven VARCHAR(35), mdpGiven VARCHAR(30)) RETURNS CHAR(32)
+    BEGIN
+    DECLARE cle CHAR(32);
+    DECLARE id INT;
+    SELECT idUtilisateur INTO id FROM Utilisateur WHERE login = loginGiven AND mdp = mdpGiven;
+    IF id IS NOT NULL THEN
+        SELECT cleApi INTO cle FROM ClesApi WHERE idUtilisateur = id;
+        IF cle IS NULL THEN
+            SELECT REPLACE(UUID(),'-','') AS Random32 INTO cle;
+            INSERT INTO ClesApi (cleApi, idUtilisateur) VALUES (cle, id);
+        END IF;
+    ELSE
+        SET cle = 'erreur';
+    END IF;
+    RETURN cle;
+    END$$
+DELIMITER ;
 
 CREATE TABLE Utilisateur (
     idUtilisateur INT PRIMARY KEY AUTO_INCREMENT,
@@ -176,6 +197,21 @@ CREATE TABLE SpectacleScenes (
     PRIMARY KEY (idFestival, idSpectacle, idScene),
     FOREIGN KEY (idScene) REFERENCES Scene(idScene),
     FOREIGN KEY (idSpectacle) REFERENCES Spectacle(idSpectacle),
+    FOREIGN KEY (idFestival) REFERENCES Festival(idFestival)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE ClesApi (
+     cleApi CHAR(32) NOT NULL,
+     idUtilisateur INT(11) NOT NULL,
+     PRIMARY KEY (idUtilisateur),
+     FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur(idUtilisateur)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE Favoris (
+    idUtilisateur INT(11) NOT NULL,
+    idFestival INT(11) NOT NULL,
+    PRIMARY KEY (idUtilisateur, idFestival),
+    FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur(idUtilisateur),
     FOREIGN KEY (idFestival) REFERENCES Festival(idFestival)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
