@@ -22,7 +22,7 @@
 
     function getListeFestival(PDO $pdo): array
     {
-        $stmt = $pdo->prepare("SELECT idFestival, titre, dateDebut, dateFin FROM Festival");
+        $stmt = $pdo->prepare("SELECT idFestival, titre, dateDebut, dateFin, (SELECT COUNT(*) FROM Favoris WHERE Favoris.idFestival = Festival.idFestival AND Favoris.idUtilisateur = 1) AS favori FROM Festival;");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -85,20 +85,34 @@
         return $resultat;
     }
 
-    function ajouterFavorie(PDO $pdo, $idUtilisateur, $idFestival): void
+    function ajouterFavori(PDO $pdo, $idUtilisateur, $idFestival): mixed
     {
-        $stmt = $pdo->prepare("INSERT INTO Favoris (idUtilisateur, idFestival) VALUES (:idUtilisateur, :idFestival)");
-        $stmt->bindParam(':idUtilisateur', $idUtilisateur);
-        $stmt->bindParam(':idFestival', $idFestival);
-        $stmt->execute();
+        try {
+            $stmt = $pdo->prepare("INSERT INTO Favoris (idUtilisateur, idFestival) VALUES (:idUtilisateur, :idFestival)");
+            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+            $stmt->bindParam(':idFestival', $idFestival);
+            $stmt->execute();
+            return 0;
+        } catch (PDOException $e) {
+            return $e->errorInfo[1];
+        }
     }
 
-    function supprimerFavorie(PDO $pdo, $idUtilisateur, $idFestival): void
+    function supprimerFavori(PDO $pdo, $idUtilisateur, $idFestival): mixed
     {
-        $stmt = $pdo->prepare("DELETE FROM Favoris WHERE idUtilisateur = :idUtilisateur AND idFestival = :idFestival");
-        $stmt->bindParam(':idUtilisateur', $idUtilisateur);
-        $stmt->bindParam(':idFestival', $idFestival);
-        $stmt->execute();
+        try {
+            $stmt = $pdo->prepare("DELETE FROM Favoris WHERE idUtilisateur = :idUtilisateur AND idFestival = :idFestival");
+            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+            $stmt->bindParam(':idFestival', $idFestival);
+            $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (PDOException $e) {
+            return $e->errorInfo[1];
+        }
     }
 
     function getListeFavoris(PDO $pdo, $idUtilisateur): array
