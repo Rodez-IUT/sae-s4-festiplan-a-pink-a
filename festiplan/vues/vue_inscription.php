@@ -22,19 +22,19 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="form-group texteGauche">
-                            <input name="nom" type="text" class="form-control <?php echo (!$nomOk) ?
-                                'placeholder-invalid' : ''; ?>" placeholder="<?php echo (!$nomOk) ?
+                            <input name="nom" type="text" class="form-control <?php echo (isset($nomOk) && !$nomOk) ?
+                                'placeholder-invalid' : ''; ?>" placeholder="<?php echo (isset($nomOk) && !$nomOk) ?
                                    'Nom invalide !' : 'NOM'; ?>" value="" required>
                         </div>
                         <div class="form-group texteGauche">
-                            <input name="prenom" type="text" class="form-control <?php echo (!$prenomOk) ?
-                                'placeholder-invalid' : ''; ?>" placeholder="<?php echo (!$prenomOk) ?
+                            <input name="prenom" type="text" class="form-control <?php echo (isset($prenomOk) && !$prenomOk) ?
+                                'placeholder-invalid' : ''; ?>" placeholder="<?php echo (isset($prenomOk) && !$prenomOk) ?
                                    'Prenom invalide !' : 'PRENOM'; ?>" value="" required>
                         </div>
                         <div class="form-group texteGauche">
                             <div class="input-group">
-                                <input name="email" type="email" class="form-control <?php echo (!$emailOk) ?
-                                    'placeholder-invalid' : ''; ?>" placeholder="<?php echo (!$emailOk) ?
+                                <input name="email" type="email" class="form-control <?php echo (isset($emailOk) && !$emailOk) ?
+                                    'placeholder-invalid' : ''; ?>" placeholder="<?php echo (isset($emailOk) && !$emailOk) ?
                                        'Email invalide !' : 'ADRESSE MAIL'; ?>" value="" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text"><span class="fas fa-solid fa-envelope"></span></span>
@@ -44,14 +44,14 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group texteGauche">
-                            <input name="login" type="text" class="form-control <?php echo (!$loginOk) ?
-                                'placeholder-invalid' : ''; ?>" placeholder="<?php echo (!$loginOk) ?
+                            <input name="login" type="text" class="form-control <?php echo (isset($loginOk) && !$loginOk) ?
+                                'placeholder-invalid' : ''; ?>" placeholder="<?php echo (isset($loginOk) && !$loginOk) ?
                                    'Login invalide !' : 'LOGIN'; ?>" value="" required>
                         </div>
                         <div class="form-group texteGauche">
                             <div class="input-group">
-                                <input name="mdp" type="password" class="form-control <?php echo (!$mdpOk) ?
-                                    'placeholder-invalid' : ''; ?>" placeholder="<?php echo (!$mdpOk) ?
+                                <input name="mdp" type="password" class="form-control <?php echo (isset($mdpOk) && !$mdpOk) ?
+                                    'placeholder-invalid' : ''; ?>" placeholder="<?php echo (isset($mdpOk) && !$mdpOk) ?
                                        'Mot de passe non conforme !' : 'MOT DE PASSE'; ?>" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>
@@ -60,8 +60,8 @@
                         </div>
                         <div class="form-group texteGauche">
                             <div class="input-group">
-                                <input name="confirmMdp" type="password" class="form-control <?php echo (!$confirmMdpOk)
-                                    ? 'placeholder-invalid' : ''; ?>" placeholder="<?php echo (!$confirmMdpOk) ?
+                                <input name="confirmMdp" type="password" class="form-control <?php echo (isset($confirmMdpOk) && !$confirmMdpOk)
+                                    ? 'placeholder-invalid' : ''; ?>" placeholder="<?php echo (isset($confirmMdpOk) && !$confirmMdpOk) ?
                                         'Mot de passe différent !' : 'CONFIRMER LE MOT DE PASSE'; ?>" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>

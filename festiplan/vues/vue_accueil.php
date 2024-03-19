@@ -3,6 +3,10 @@
 if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte'] == false) {
     header("Location: ../index.php");
 }
+// Règle par défaut :
+if (!isset($afficherSpectacles)){
+    $afficherSpectacles = false;
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +30,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
             </div>
             <div class="col-8">
                 <h2 class="texteCentre blanc bas">
-                    <?php if ($afficher) {
+                    <?php if ($afficherSpectacles) {
                         echo 'Mes spectacles';
                     } else {
                         echo 'Mes festivals';
@@ -53,7 +57,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
     <div class="container-fluid">
         <?php
         // Affichage de la liste des spectacles
-        if ($afficher) {
+        if ($afficherSpectacles && isset($mesSpectacles)) {
             if ($mesSpectacles->rowCount() > 0) {
                 ?>
 
@@ -94,15 +98,17 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     </div>
                     <?php
                 }
+                if (isset($nbPages)){
                 ?>
-                <div class="pagination">
-                    <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
-                        <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficher; ?>">
-                            <?php echo $page; ?>
-                        </a>
-                    <?php } ?>
-                </div>
+                    <div class="pagination">
+                        <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
+                            <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficherSpectacles; ?>">
+                                <?php echo $page; ?>
+                            </a>
+                        <?php } ?>
+                    </div>
                 <?php
+                }
             } else {
                 echo '<div class="col-12">';
                 echo '<div class="centre">';
@@ -110,7 +116,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 echo '</div>';
                 echo '</div>';
             }
-        } else {
+        } else if (isset($mesFestivals, $lesResponsables)){
             if ($mesFestivals->rowCount() > 0) {
                 ?>
 
@@ -150,15 +156,17 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 
                     <?php
                 }
+                if (isset($nbPages)) {
                 ?>
-                <div class="pagination">
-                    <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
-                        <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficher; ?>">
-                            <?php echo $page; ?>
-                        </a>
-                    <?php } ?>
-                </div>
+                    <div class="pagination">
+                        <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
+                            <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficherSpectacles; ?>">
+                                <?php echo $page; ?>
+                            </a>
+                        <?php } ?>
+                    </div>
                 <?php
+                }
             } else {
                 echo '<div class="col-12">';
                 echo '<div class="centre">';
@@ -176,12 +184,12 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             class="fas fa-solid fa-plus"></span><b> Spectacle</b></button></a>
             </div>
             <div class="col-4">
-                <a href="?controller=Accueil&action=<?php if ($afficher) {
+                <a href="?controller=Accueil&action=<?php if ($afficherSpectacles) {
                     echo 'voirFestival';
                 } else {
                     echo 'VoirSpectacle';
                 } ?>"><button type="submit" class="btn btn-secondary btnModif fondGris">
-                        <?php if ($afficher) {
+                        <?php if ($afficherSpectacles) {
                             echo '<b>Voir mes festivals</b>';
                         } else {
                             echo '<b>Voir mes spectacles</b>';

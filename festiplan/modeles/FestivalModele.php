@@ -92,7 +92,6 @@ class FestivalModele
         $stmt->bindParam("nPage",$premier,PDO::PARAM_INT);
         $stmt->execute();
         return $stmt;
-        
     }
 
     /**
@@ -102,7 +101,10 @@ class FestivalModele
      */
     public function listeLesResponsables(PDO $pdo)
     {
-        $sql = "SELECT Utilisateur.nom,EquipeOrganisatrice.idFestival FROM EquipeOrganisatrice JOIN Utilisateur ON Utilisateur.idUtilisateur=EquipeOrganisatrice.idUtilisateur WHERE EquipeOrganisatrice.responsable = true";
+        $sql = "SELECT Utilisateur.nom,EquipeOrganisatrice.idFestival 
+                FROM EquipeOrganisatrice 
+                JOIN Utilisateur ON Utilisateur.idUtilisateur = EquipeOrganisatrice.idUtilisateur 
+                WHERE EquipeOrganisatrice.responsable = true";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return $stmt;

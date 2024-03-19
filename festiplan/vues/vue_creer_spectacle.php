@@ -53,35 +53,35 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <div class="padding">
             <div class="row">
                 <div class="col-12">
-                    <label id="<?php if (!$titreOk) {
+                    <label id="<?php if (isset($titreOk) && !$titreOk) {
                         echo 'invalide';
                     } ?>">Titre :</label>
                     <br>
                     <input type="text" id="titre" name="titre" placeholder="(35 caractères maximum)"
-                        value="<?php if ($titreOk) {
+                        value="<?php if (isset($titreOk, $ancienTitre) && $titreOk) {
                             echo $ancienTitre;
                         } ?>" required class="input-style">
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <label id="<?php if (!$descOk) {
+                    <label id="<?php if (isset($descOk) && !$descOk) {
                         echo 'invalide';
                     } ?>">Description :</label>
                     <br>
                     <textarea name="description" placeholder="(1000 caractères maximum)" required
-                        class="textarea-style"><?php if ($descOk) {
+                        class="textarea-style"><?php if (isset($descOk, $ancienneDesc) && $descOk) {
                             echo $ancienneDesc;
                         } ?></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <label id="<?php if (!$dureeOk) {
+                    <label id="<?php if (isset($dureeOk) && !$dureeOk) {
                         echo 'invalide';
                     } ?>">Duree du spectacle :</label>
                     <br>
-                    <input id="duree" name="duree" type="time" value="<?php if ($dureeOk) {
+                    <input id="duree" name="duree" type="time" value="<?php if (isset($dureeOk, $ancienneDuree) && $dureeOk) {
                         echo $ancienneDuree;
                     } ?>"
                         required class="input-style">
@@ -89,14 +89,15 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
             </div>
             <div class="row">
                 <div class="col-12">
-                    <label id="<?php if (!$categorieOk) {
+                    <label id="<?php if (isset($categorieOk) && !$categorieOk) {
                         echo 'invalide';
                     } ?>">Liste catégorie :</label><br>
                     <select id="categorie" name="categorie" required class="input-style">
                         <option disabled value="0">Choisissez une catégorie de spectacle</option>
                         <?php
-                        while ($row = $searchStmt->fetch()) { ?>
-                            <option value="<?php echo $row['idCategorie']; ?>" <?php if ($row['idCategorie'] == $ancienneCategorie) {
+                        while (isset($searchStmt) && $row = $searchStmt->fetch()) { ?>
+                            <option value="<?php echo $row['idCategorie']; ?>"
+                                <?php if (isset($ancienneCategorie) && $row['idCategorie'] == $ancienneCategorie) {
                                   echo 'selected';
                               } ?>>
                                 <?php echo $row['nomCategorie']; ?>
@@ -109,14 +110,15 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
             </div>
             <div class="row">
                 <div class="col-12">
-                    <label id="<?php if (!$tailleOk) {
+                    <label id="<?php if (isset($tailleOk) && !$tailleOk) {
                         echo 'invalide';
                     } ?>">Taille de surface requise :</label><br>
                     <select id="taille" name="taille" required class="input-style">
                         <option disabled value="0">Choisissez une taille de scène</option>
                         <?php
-                        while ($row = $search_stmt->fetch()) { ?>
-                            <option value="<?php echo $row['idTaille']; ?>" <?php if ($row['idTaille'] == $ancienneTaille) {
+                        while (isset($search_stmt) && $row = $search_stmt->fetch()) { ?>
+                            <option value="<?php echo $row['idTaille']; ?>"
+                                <?php if (isset($ancienneTaille) && $row['idTaille'] == $ancienneTaille) {
                                   echo 'selected';
                               } ?>>
                                 <?php echo $row['nom']; ?>

@@ -48,7 +48,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
     <div class="container-fluid">
         <?php
 
-        if ($search_stmt->rowCount() > 0) {
+        if (isset($search_stmt) && $search_stmt->rowCount() > 0) {
 
             ?>
             <div class="table-scrollable">
@@ -107,9 +107,18 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             class="fas fa-solid fa-arrow-left-long"></span></button></a>
             </div>
             <div class="col-4">
-                <a href="?controller=Spectacle&action=ajouterIntervenant&idSpectacle=<?php echo $idSpectacle; ?>"><button
-                        type="button" class="btn btn-success btnModif fondVert"><span
-                            class="fas fa-solid fa-plus"></span><b> Intervenant</b></button></a>
+                <?php if (isset($idSpectacle)){ ?>
+                <a href="?controller=Spectacle&action=ajouterIntervenant&idSpectacle=<?php echo $idSpectacle; ?>">
+                    <?php } ?>
+                    <button
+                        type="button" class="btn btn-success btnModif fondVert">
+                        <span class="fas fa-solid fa-plus">
+                        </span>
+                        <b>Intervenant</b>
+                    </button>
+                    <?php if (isset($idSpectacle)){ ?>
+                </a>
+                <?php } ?>
             </div>
             <div class="col-4">
                 <button type="button" class="btn btn-success btnModif fondVert"><span
