@@ -46,9 +46,9 @@ class UserModele
             $sql = "INSERT INTO Utilisateur (login, mdp, nom, prenom, mail) VALUES (?,?,?,?,?)";
             $searchStmt = $pdo->prepare($sql);
             $searchStmt->execute([$login, $mdp, $nom, $prenom, $email]);
-            return true;
-            // Fin de la transaction (enregistrement des modifications)
             $pdo->commit();
+            return true;
+            // Fin de la transaction (enregistrement des modifications
         } catch (PDOException $e) {
             // En cas d'erreur, annuler la transaction
             $pdo->rollBack();

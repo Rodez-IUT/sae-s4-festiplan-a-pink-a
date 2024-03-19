@@ -14,14 +14,12 @@ class UtilisateurCompteControleur
 {
     private UserModele $userModele;
 
-    private SpectacleModele $spectacleModele;
 
     private FestivalModele $festivalModele;
 
 
-    public function __construct(UserModele $userModele,SpectacleModele $spectacleModele, FestivalModele $festivalModele){
+    public function __construct(UserModele $userModele, FestivalModele $festivalModele){
         $this->userModele = $userModele;
-        $this->spectacleModele = $spectacleModele;
         $this->festivalModele = $festivalModele;
     }
 
