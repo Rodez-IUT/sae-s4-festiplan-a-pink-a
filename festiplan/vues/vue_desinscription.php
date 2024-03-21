@@ -53,8 +53,8 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 <div class="form-group texteGauche">
                     <div class="input-group">
                         <input name="login" type="text"
-                            class="form-control <?php echo (!$loginOk) ? 'placeholder-invalid' : ''; ?>"
-                            placeholder="<?php echo (!$loginOk) ? 'Login invalide !' : 'LOGIN'; ?>" required>
+                            class="form-control <?php echo (isset($loginOk) && !$loginOk) ? 'placeholder-invalid' : ''; ?>"
+                            placeholder="<?php echo (isset($loginOk) && !$loginOk) ? 'Login invalide !' : 'LOGIN'; ?>" required>
                         <div class="input-group-append">
                             <span class="input-group-text"><span class="fas fa-solid fa-user"></span></span>
                         </div>
@@ -63,8 +63,8 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 <div class="form-group texteGauche">
                     <div class="input-group">
                         <input name="mdp" type="password"
-                            class="form-control <?php echo (!$mdpOk) ? 'placeholder-invalid' : ''; ?>"
-                            placeholder="<?php echo (!$mdpOk) ? 'Mot de passe invalide !' : 'MOT DE PASSE'; ?>"
+                            class="form-control <?php echo (isset($mdpOk) && !$mdpOk) ? 'placeholder-invalid' : ''; ?>"
+                            placeholder="<?php echo (isset($mdpOk) && !$mdpOk) ? 'Mot de passe invalide !' : 'MOT DE PASSE'; ?>"
                             required>
                         <div class="input-group-append">
                             <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>

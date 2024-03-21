@@ -49,28 +49,28 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
             <div class="form-group">
                 <div class="input-group">
                     <p>Prénom :
-                        <?php echo $ancienPrenom; ?>
+                        <?php if (isset($ancienPrenom)) { echo $ancienPrenom; } ?>
                     <p>
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <p>Nom :
-                        <?php echo $ancienNom; ?>
+                        <?php if (isset($ancienNom)) { echo $ancienNom; }; ?>
                     </p>
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <p>Login :
-                        <?php echo $ancienLogin; ?>
+                        <?php if (isset($ancienLogin)) { echo $ancienLogin; }  ?>
                     </p>
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <p>Email :
-                        <?php echo $ancienEmail; ?>
+                        <?php if (isset($ancienEmail)) { echo $ancienEmail; } ?>
                     </p>
                 </div>
             </div>

@@ -46,18 +46,20 @@
                     <div class="col-md-6 col-12">
                         <div class="input-group order-1">
                             <input name="prenom" type="text"
-                                class="form-control <?php echo (!$prenomOk) ? 'placeholder-invalid' : ''; ?>" <?php if (!$prenomOk) {
+                                class="form-control <?php echo (isset($prenomOk) && !$prenomOk) ? 'placeholder-invalid' : ''; ?>"
+                                <?php if (isset ($prenomOk) && !$prenomOk) {
                                            echo 'placeholder="Prenom invalide !"';
-                                       } else {
+                                       } else if (isset($ancienPrenom)) {
                                            echo 'value="' . $ancienPrenom . '"';
                                        } ?> required>
                         </div>
                         <br>
                         <div class="input-group order-2">
                             <input name="nom" type="text"
-                                class="form-control <?php echo (!$nomOk) ? 'placeholder-invalid' : ''; ?>" <?php if (!$nomOk) {
+                                class="form-control <?php echo (isset($nomOk) && !$nomOk) ? 'placeholder-invalid' : ''; ?>"
+                                <?php if (isset($nomOk) && !$nomOk) {
                                            echo 'placeholder="Nom invalide !"';
-                                       } else {
+                                       } else if (isset($ancienNom)){
                                            echo 'value="' . $ancienNom . '"';
                                        } ?>
                                 required>
@@ -65,9 +67,10 @@
                         <br>
                         <div class="input-group order-3">
                             <input name="login" type="text"
-                                class="form-control <?php echo (!$loginOk) ? 'placeholder-invalid' : ''; ?>" <?php if (!$loginOk) {
+                                class="form-control <?php echo (isset($loginOk) && !$loginOk) ? 'placeholder-invalid' : ''; ?>"
+                                <?php if (isset($loginOk) && !$loginOk) {
                                            echo 'placeholder="login invalide !"';
-                                       } else {
+                                       } else if (isset($ancienLogin)) {
                                            echo 'value="' . $ancienLogin . '"';
                                        } ?> required>
                             <div class="input-group-append">
@@ -79,8 +82,12 @@
                     <div class="col-md-6 col-12">
                         <div class="input-group order-4">
                             <input name="ancienMdp" type="password"
-                                class="form-control <?php echo (!$ancienMdpOk) ? 'placeholder-invalid' : ''; ?>"
-                                placeholder="<?php echo (!$ancienMdpOk) ? 'Ancien mot de passe invalide !' : 'ANCIEN MOT DE PASSE'; ?>"
+                                class="form-control <?php echo (isset($ancienMdpOk) && !$ancienMdpOk) ?
+                                    'placeholder-invalid' :
+                                    ''; ?>"
+                                placeholder="<?php echo (isset($ancienMdpOk) && !$ancienMdpOk) ?
+                                    'Ancien mot de passe invalide !' :
+                                    'ANCIEN MOT DE PASSE'; ?>"
                                 required>
                             <div class="input-group-append">
                                 <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>
@@ -89,8 +96,12 @@
                         <br>
                         <div class="input-group order-5">
                             <input name="mdp" type="password"
-                                class="form-control <?php echo (!$mdpOk) ? 'placeholder-invalid' : ''; ?>"
-                                placeholder="<?php echo (!$mdpOk) ? 'Mot de passe non conforme !' : 'NOUVEAU MOT DE PASSE'; ?>">
+                                class="form-control <?php echo (isset($mdpOk) && !$mdpOk) ?
+                                    'placeholder-invalid' :
+                                    ''; ?>"
+                                placeholder="<?php echo (isset($mdpOk) && !$mdpOk) ?
+                                    'Mot de passe non conforme !' :
+                                    'NOUVEAU MOT DE PASSE'; ?>">
                             <div class="input-group-append">
                                 <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>
                             </div>
@@ -98,8 +109,8 @@
                         <br>
                         <div class="input-group order-6">
                             <input name="confirmMdp" type="password"
-                                class="form-control <?php echo (!$confirmMdpOk) ? 'placeholder-invalid' : ''; ?>"
-                                placeholder="<?php echo (!$confirmMdpOk) ? 'Mot de passe différent !' : 'CONFIRMER MOT DE PASSE'; ?>">
+                                class="form-control <?php echo (isset($confirmMdpOk) && !$confirmMdpOk) ? 'placeholder-invalid' : ''; ?>"
+                                placeholder="<?php echo (isset($confirmMdpOk) && !$confirmMdpOk) ? 'Mot de passe différent !' : 'CONFIRMER MOT DE PASSE'; ?>">
                             <div class="input-group-append">
                                 <span class="input-group-text"><span class="fas fa-solid fa-lock"></span></span>
                             </div>
@@ -109,9 +120,9 @@
                     <div class="col-12">
                         <div class="input-group order-7">
                             <input name="email" type="text"
-                                class="form-control <?php echo (!$emailOk) ? 'placeholder-invalid' : ''; ?>" <?php if (!$emailOk) {
+                                class="form-control <?php echo (isset($emailOk) && !$emailOk) ? 'placeholder-invalid' : ''; ?>" <?php if (!$emailOk) {
                                            echo 'placeholder="login invalide !"';
-                                       } else {
+                                       } else if (isset($ancienEmail)) {
                                            echo 'value="' . $ancienEmail . '"';
                                        } ?> required>
                             <div class="input-group-append">

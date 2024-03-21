@@ -6,6 +6,7 @@ use modeles\UserModele;
 use modeles\SpectacleModele;
 use modeles\FestivalModele;
 use PDO;
+use PDOException;
 use yasmf\HttpHelper;
 use yasmf\View;
 
@@ -13,14 +14,12 @@ class UtilisateurCompteControleur
 {
     private UserModele $userModele;
 
-    private SpectacleModele $spectacleModele;
 
     private FestivalModele $festivalModele;
 
 
-    public function __construct(UserModele $userModele,SpectacleModele $spectacleModele, FestivalModele $festivalModele){
+    public function __construct(UserModele $userModele, FestivalModele $festivalModele){
         $this->userModele = $userModele;
-        $this->spectacleModele = $spectacleModele;
         $this->festivalModele = $festivalModele;
     }
 
@@ -133,9 +132,11 @@ class UtilisateurCompteControleur
         $verifConfirmMdp = true;
         $verifEmail = true;
         $verifAncienMdp = true;
+
         session_start();
         $utilisateur = $this->userModele->recupererInformationsProfil($pdo, $_SESSION['id_utilisateur']);
         $utilisateur = $utilisateur->fetch();
+
         $vue = new View("vues/vue_modifier_profil");
         $vue->setVar("nomOk", $verifNom);
         $vue->setVar("ancienNom", $utilisateur['nom']);

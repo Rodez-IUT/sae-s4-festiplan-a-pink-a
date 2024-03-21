@@ -46,7 +46,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
     <div class="padding">
         <div class="row">
             <?php
-            if ($message != null) {
+            if (isset($message)) {
                 ?>
                 <div class="col-12">
                     <p id="invalide">
@@ -60,13 +60,17 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     <input type="hidden" name="controller" value="Grij" />
                     <input type="hidden" name="action" value="enregistrerGrij" />
                     <div class="row">
+                        <?php if (isset($idFestival)){?>
                         <input type="hidden" name="idFestival" value="<?php echo $idFestival; ?>" />
+                        <?php } ?>
                         <br>
                         <div class="col-12">
                             <label for="heureDebut">Heure de début :</label>
                         </div>
                         <div class="col-12">
+                            <?php if(isset($heureDebut)) { ?>
                             <input type="time" name="heureDebut" value="<?php echo $heureDebut; ?>"
+                            <?php } ?>
                                 class="input-style" />
                         </div>
                         <br>
@@ -74,14 +78,22 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             <label for="heureFin">Heure de fin :</label>
                         </div>
                         <div class="col-12">
-                            <input type="time" name="heureFin" value="<?php echo $heureFin; ?>" class="input-style" />
+                            <input type="time" name="heureFin" value="
+                            <?php echo isset($heureFin) ?
+                                $heureFin :
+                                ""; ?>"
+                                   class="input-style" />
                         </div>
                         <br>
                         <div class="col-12">
                             <label for="ecartEntreSpectacles">Écart entre chaque spectacle :</label>
                         </div>
                         <div class="col-12">
-                            <input type="time" name="ecartEntreSpectacles" value="<?php echo $ecartEntreSpectacles; ?>"
+                            <input type="time" name="ecartEntreSpectacles" value="
+                            <?php echo isset($ecartEntreSpectacles) ?
+                                $ecartEntreSpectacles :
+                                "";
+                            ?>"
                                 class="input-style">
                         </div>
                     </div>

@@ -49,12 +49,14 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 
         <input type="hidden" name="controller" value="Spectacle">
         <input type="hidden" name="action" value="nouveauIntervenant">
-        <input type="hidden" name="idSpectacle" value="<?php echo $idSpectacle ?>">
-        <input type="hidden" name="existePas" value="<?php echo $existePas ?>">
+        <?php if(isset($idSpectacle, $existePas)){ ?>
+            <input type="hidden" name="idSpectacle" value="<?php echo $idSpectacle ?>">
+            <input type="hidden" name="existePas" value="<?php echo $existePas ?>">
+        <?php }?>
         <input type="hidden" name="modifier" value="false">
         <div class="padding">
             <?php
-            if ($existePas) {
+            if (isset($existePas) && $existePas) {
                 echo '<h3 id="invalide">Votre intervenant existe déja</h3>';
             }
             ?>
@@ -78,11 +80,13 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     <label>Choisissez le métier de l'intervenant :</label><br>
                     <select class="input-style" name="metierIntervenant" required>
                         <?php
-                        while ($row = $searchStmt->fetch()) { ?>
-                            <option value="<?php echo $row['idMetierIntervenant']; ?>">
-                                <?php echo $row['metier']; ?>
-                            </option>
-                            <?php
+                        if (isset($searchStmt)){
+                            while ($row = $searchStmt->fetch()) { ?>
+                                <option value="<?php echo $row['idMetierIntervenant']; ?>">
+                                    <?php echo $row['metier']; ?>
+                                </option>
+                                <?php
+                            }
                         }
                         ?>
                     </select>
@@ -100,9 +104,13 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <div class="container-fluid footer">
             <div class="row">
                 <div class="col-6">
-                    <a href="?controller=Spectacle&action=afficherIntervenant&idSpectacle=<?php echo $idSpectacle; ?>"><button
-                            type="button" class="btn btn-secondary fondGris btnModif"><span
-                                class="fas fa-solid fa-arrow-left-long"></span></button></a>
+                    <?php if(isset($idSpectacle)){ ?>
+                    <a href="?controller=Spectacle&action=afficherIntervenant&idSpectacle=<?php echo $idSpectacle; ?>">
+                        <button type="button" class="btn btn-secondary fondGris btnModif">
+                            <span class="fas fa-solid fa-arrow-left-long"></span>
+                        </button>
+                    </a>
+                    <?php } ?>
                 </div>
                 <div class="col-6">
                     <button type="submit" class="btn btn-primary fondBleu btnModif"><span

@@ -47,44 +47,53 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 
         <input type="hidden" name="controller" value="Festival">
         <input type="hidden" name="action" value="majOrganisateur">
-        <input type="hidden" name="idFestival" value="<?php echo $idFestival ?>">
-
+        <?php if(isset($idFestival)){ ?>
+            <input type="hidden" name="idFestival" value="<?php echo $idFestival ?>">
+        <?php } ?>
         <br>
         <h1>Liste des Organisateurs : </h1><br>
         <?php
-        // Charger tous les résultats de la liste des organisateurs dans un tableau
-        $organisateurIDs = array();
-        while ($row2 = $listeOrganisateur->fetch()) {
-            $organisateurIDs[] = $row2['idUtilisateur'];
-        }
+        if (isset($organisateurIDs, $listeOrganisateur, $listeUtilisateur, $idResponsable)){
+            // Charger tous les résultats de la liste des organisateurs dans un tableau
+            $organisateurIDs = array();
+            while ($row2 = $listeOrganisateur->fetch()) {
+                $organisateurIDs[] = $row2['idUtilisateur'];
+            }
 
-        // Revenir au début de la liste des organisateurs
-        $listeOrganisateur->execute();
+            // Revenir au début de la liste des organisateurs
+            $listeOrganisateur->execute();
 
-        while ($row = $listeUtilisateur->fetch()) {
-            ?>
-            <div class="col-12">
-                <input type="checkbox" class="checkBoxs" name="Utilisateurs[]" value="<?php echo $row['idUtilisateur']; ?>" <?php
-                   // Vérifier si l'utilisateur est dans la liste des organisateurs
-                   if (in_array($row['idUtilisateur'], $organisateurIDs)) {
-                       echo 'checked';
+            while ($row = $listeUtilisateur->fetch()) {
+                ?>
+                <div class="col-12">
+                    <input type="checkbox" class="checkBoxs" name="Utilisateurs[]" value="<?php echo $row['idUtilisateur']; ?>" <?php
+                       // Vérifier si l'utilisateur est dans la liste des organisateurs
+                       if (in_array($row['idUtilisateur'], $organisateurIDs)) {
+                           echo 'checked';
 
-                   }
-                   // Rend le responsable impossible a uncheck
-                   if ($row['idUtilisateur'] == $idResponsable) {
-                       echo ' disabled';
-                   }
-                   ?>>
-                <?php echo $row['nom'] . " " . $row['prenom']; ?>
-                <br>
-            </div>
-            <?php
+                       }
+                       // Rend le responsable impossible a uncheck
+                       if ($row['idUtilisateur'] == $idResponsable) {
+                           echo ' disabled';
+                       }
+                       ?>>
+                    <?php echo $row['nom'] . " " . $row['prenom']; ?>
+                    <br>
+                </div>
+                <?php
+            }
         }
         ?>
         <div class="footer">
             <button type="submit" class="btn btn-bleu">Confirmer</button>
-            <a href="?controller=Festival&action=afficherFestival&idFestival=<?php echo $idFestival; ?>"><button
-                    type="button" class="btn btn-gris">Annuler</button></a>
+            <?php if (isset($idFestival)) { ?>
+                <a href="?controller=Festival&action=afficherFestival&idFestival=<?php echo $idFestival; ?>">
+                    <button
+                        type="button" class="btn btn-gris">
+                        Annuler
+                    </button>
+                </a>
+            <?php } ?>
         </div>
     </form>
 </body>

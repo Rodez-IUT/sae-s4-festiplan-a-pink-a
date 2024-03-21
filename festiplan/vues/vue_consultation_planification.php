@@ -49,56 +49,66 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 <div class="row">
                     <?php
                     // Liste des jours du festival
-                    while ($jour = $listeJours->fetch()) {
-                        ?>
-                        <div class="col-xl-4 col-md-6 col-12 ">
-                            <div class="fondJour">
-                                <h3>
-                                    <?php echo $jour['dateJour']; ?>
-                                </h3>
-                                <?php
-                                // Liste des spetacles du jour du festival
-                                $listeTitres = explode(',', $jour['titres']);
-                                $listeId = explode(',', $jour['idSpectacles']);
-                                $listeHeureDebut = explode(',', $jour['heureDebut']);
-                                $listeHeureFin = explode(',', $jour['heureFin']);
-                                $i = 0;
-                                foreach ($listeTitres as $titreSpectacle) {
-                                    ?>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <a href="?controller=Grij&action=profilSpectacleJour&idFestival=<?php echo $idFestival; ?>&idSpectacle=<?php echo $listeId[$i]; ?>"
-                                                class="square-link">
-                                                <div class="square">
-                                                    <div class="content">
-                                                        <h4>
-                                                            <?php echo $titreSpectacle; ?>
-                                                        </h4>
-                                                        <p>De :
-                                                            <?php echo $listeHeureDebut[$i]; ?>
-                                                        </p>
-                                                        <p>À :
-                                                            <?php echo $listeHeureFin[$i]; ?>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
+                    if (isset($listeJours)){
+                        while ($jour = $listeJours->fetch()) {
+                            ?>
+                            <div class="col-xl-4 col-md-6 col-12 ">
+                                <div class="fondJour">
+                                    <h3>
+                                        <?php echo $jour['dateJour']; ?>
+                                    </h3>
                                     <?php
-                                    $i++;
-                                }
-                                ?>
+                                    // Liste des spetacles du jour du festival
+                                    $listeTitres = explode(',', $jour['titres']);
+                                    $listeId = explode(',', $jour['idSpectacles']);
+                                    $listeHeureDebut = explode(',', $jour['heureDebut']);
+                                    $listeHeureFin = explode(',', $jour['heureFin']);
+                                    $i = 0;
+                                    foreach ($listeTitres as $titreSpectacle) {
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <?php
+                                                if (isset($idFestival)) {
+                                                    $idSpectacle = $listeId[$i];
+                                                    $url = "?controller=Grij&action=profilSpectacleJour&idFestival=$idFestival&idSpectacle=$idSpectacle";
+                                                    echo "<a href='$url' class='square-link'>";
+                                                }
+                                                ?>
+                                                    <div class="square">
+                                                        <div class="content">
+                                                            <h4>
+                                                                <?php echo $titreSpectacle; ?>
+                                                            </h4>
+                                                            <p>De :
+                                                                <?php echo $listeHeureDebut[$i]; ?>
+                                                            </p>
+                                                            <p>À :
+                                                                <?php echo $listeHeureFin[$i]; ?>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                                if (isset($idFestival))
+                                                echo "</a>";
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <?php
+                                        $i++;
+                                    }
+                                    ?>
+                                </div>
                             </div>
-                        </div>
-                        <?php
+                            <?php
+                        }
                     }
                     ?>
                 </div>
             </div>
             <div class="col-md-3 col-12">
                 <?php
-                if ($profilSpectacle) {
+                if (isset($infosSpectacle, $profilSpectacle) && $profilSpectacle) {
                     $spectacle = $infosSpectacle->fetch();
                     ?>
                     <div class="row fondDescSpectacle">
@@ -118,29 +128,31 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                         </div>
                         <div class="col-12">
                             <?php
-                            while ($scene = $listeScenes->fetch()) {
-                                ?>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <h5 class="titreSpecDesc text-truncate">
-                                            <?php echo $scene['nomScene']; ?>
-                                        </h5>
+                            if (isset($listeScenes)){
+                                while ($scene = $listeScenes->fetch()) {
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5 class="titreSpecDesc text-truncate">
+                                                <?php echo $scene['nomScene']; ?>
+                                            </h5>
+                                        </div>
+                                        <div class="col-4">
+                                            nombre de spectateurs<br>
+                                            <?php echo $scene['nbSpectateurs']; ?>
+                                        </div>
+                                        <div class="col-4">
+                                            <b>Longitude : </b>
+                                            <?php echo $scene['longitude']; ?><br />
+                                            <b>Latitude : </b>
+                                            <?php echo $scene['latitude']; ?>
+                                        </div>
+                                        <div class="col-12">
+                                            <hr>
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                        nombre de spectateurs</br>
-                                        <?php echo $scene['nbSpectateurs']; ?>
-                                    </div>
-                                    <div class="col-4">
-                                        <b>Longitude : </b>
-                                        <?php echo $scene['longitude']; ?><br />
-                                        <b>Latitude : </b>
-                                        <?php echo $scene['latitude']; ?>
-                                    </div>
-                                    <div class="col-12">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <?php
+                                    <?php
+                                }
                             }
                             ?>
                         </div>
@@ -154,7 +166,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     <?php
                 }
                 echo '<div class="col-12';
-                if ($specNonPlace = $listeSpectacleNonPlace->fetch()) {
+                if (isset($listeSpectacleNonPlace) && $specNonPlace = $listeSpectacleNonPlace->fetch()) {
                     echo '">';
                     ?>
                     <div class="row">
@@ -204,9 +216,9 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                                 </div>
                             </div>
                             <?php
-                        }
+                    }
                 } else {
-                    echo ' fondVertSpec">';
+                echo ' fondVertSpec">';
                     ?>
                         <h3><b>Tous les spectacles ont été placés</b></h3>
 
@@ -218,18 +230,26 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
     </div>
     </div>
     <div class="ecartBottom"></div>
+    <?php if(isset($idFestival)){ ?>
     <div class="container-fluid footerGrij">
         <div class="row">
             <div class="col-6">
-                <a href="?controller=Grij&idFestival=<?php echo $idFestival; ?>"><button class="btnModifierGrij">Modifier
-                        la planification</button></a>
+                <a href="?controller=Grij&idFestival=<?php echo $idFestival; ?>">
+                    <button class="btnModifierGrij">
+                        Modifier la planification
+                    </button>
+                </a>
             </div>
             <div class="col-6">
-                <a href="?controller=Festival&action=afficherFestival&idFestival=<?php echo $idFestival; ?>"><button
-                        type="submit" class="btn btn-primary fondBleu">Modifier le Festival</button></a>
+                <a href="?controller=Festival&action=afficherFestival&idFestival=<?php echo $idFestival; ?>">
+                    <button type="submit" class="btn btn-primary fondBleu">
+                        Modifier le Festival
+                    </button>
+                </a>
             </div>
         </div>
     </div>
+    <?php } ?>
 </body>
 
 </html>

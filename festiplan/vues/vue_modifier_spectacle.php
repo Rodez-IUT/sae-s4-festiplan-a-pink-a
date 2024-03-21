@@ -49,35 +49,37 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <input type="hidden" name="controller" value="Spectacle">
         <input type="hidden" name="action" value="nouveauSpectacle">
         <input type="hidden" name="modifier" value="true">
-        <input type="hidden" name="idSpectacle" value="<?php echo $idSpectacle ?>">
+        <?php if(isset($idSpectacle)) { ?>
+            input type = "hidden" name = "idSpectacle" value = "<?php echo $idSpectacle ?>" >
+        <?php }?>
         <div class="padding">
             <div class="row">
                 <div class="col-12">
-                    <label id="<?php if (!$titreOk) {
+                    <label id="<?php if (isset($titreOk) && !$titreOk) {
                         echo 'invalide';
                     } ?>">Titre :</label>
                     <br>
                     <input type="text" id="titre" name="titre" placeholder="(35 caractères maximum)"
-                        value="<?php if ($titreOk) {
+                        value="<?php if (isset($ancienTitre) && $titreOk) {
                             echo $ancienTitre;
                         } ?>" required class="input-style">
                 </div>
                 <div class="col-12">
-                    <label id="<?php if (!$descOk) {
+                    <label id="<?php if (isset($descOk) && !$descOk) {
                         echo 'invalide';
                     } ?>">Description :</label>
                     <br>
                     <textarea name="description" placeholder="(1000 caractères maximum)" required
-                        class="textarea-style"><?php if ($descOk) {
+                        class="textarea-style"><?php if (isset($ancienneDesc) && $descOk) {
                             echo $ancienneDesc;
                         } ?></textarea>
                 </div>
                 <div class="col-12">
-                    <label id="<?php if (!$dureeOk) {
+                    <label id="<?php if (isset($dureeOk) && !$dureeOk) {
                         echo 'invalide';
                     } ?>">Durée du spectacle :</label>
                     <br>
-                    <input id="duree" name="duree" type="time" value="<?php if ($dureeOk) {
+                    <input id="duree" name="duree" type="time" value="<?php if (isset($dureeOk,$ancienneDuree) && $dureeOk) {
                         echo $ancienneDuree;
                     } ?>"
                         required class="input-style">
@@ -86,8 +88,9 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     <label for="categorie">Liste catégorie :</label><br>
                     <select id="categorie" name="categorie" required class="input-style">
                         <?php
-                        while ($row = $searchStmt->fetch()) { ?>
-                            <option value="<?php echo $row['idCategorie']; ?>" <?php if ($row['idCategorie'] == $ancienneCategorie) {
+                        while (isset($searchStmt) && $row = $searchStmt->fetch()) { ?>
+                            <option value="<?php echo $row['idCategorie']; ?>"
+                                <?php if (isset($ancienneCategorie) && $row['idCategorie'] == $ancienneCategorie) {
                                   echo 'selected';
                               } ?>>
                                 <?php echo $row['nomCategorie']; ?>
@@ -101,8 +104,9 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     <label for="taille">Taille de surface requise :</label><br>
                     <select id="taille" name="taille" required class="input-style">
                         <?php
-                        while ($row = $search_stmt->fetch()) { ?>
-                            <option value="<?php echo $row['idTaille']; ?>" <?php if ($row['idTaille'] == $ancienneTaille) {
+                        while (isset($search_stmt) && $row = $search_stmt->fetch()) { ?>
+                            <option value="<?php echo $row['idTaille']; ?>"
+                                <?php if (isset($ancienneTaille) && $row['idTaille'] == $ancienneTaille) {
                                   echo 'selected';
                               } ?>>
                                 <?php echo $row['nom']; ?>
