@@ -7,4 +7,5 @@ Bin
 .settings
 .DS_Store
 /bin/
+/.idea/
 vendor
