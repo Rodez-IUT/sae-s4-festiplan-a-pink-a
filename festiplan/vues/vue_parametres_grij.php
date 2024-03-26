@@ -41,7 +41,6 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         </div>
     </div>
 </header>
-
 <body class="body-blanc">
     <div class="padding">
         <div class="row">
@@ -68,34 +67,38 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             <label for="heureDebut">Heure de début :</label>
                         </div>
                         <div class="col-12">
+<<<<<<< HEAD
                             <input type="time" name="heureDebut" value=" <?php echo isset($heureFin) ?
                                 $heureFin :
                                 ""; ?>"
                                    class="input-style" />
                                
+=======
+                            <input type="time" name="heureDebut" value="<?php
+                                if (isset($heureDebut)){
+                                    echo $heureDebut;
+                                }?>" class="input-style" />
+>>>>>>> fd4546590f1cfbc1df8429f58d9daa0d6c7ba757
                         </div>
                         <br>
                         <div class="col-12">
                             <label for="heureFin">Heure de fin :</label>
                         </div>
                         <div class="col-12">
-                            <input type="time" name="heureFin" value="
-                            <?php echo isset($heureFin) ?
-                                $heureFin :
-                                ""; ?>"
-                                   class="input-style" />
+                            <input type="time" name="heureFin" value="<?php
+                                echo isset($heureFin) ? $heureFin : "";
+                                ?>" class="input-style" />
                         </div>
                         <br>
                         <div class="col-12">
                             <label for="ecartEntreSpectacles">Écart entre chaque spectacle :</label>
                         </div>
                         <div class="col-12">
-                            <input type="time" name="ecartEntreSpectacles" value="
-                            <?php echo isset($ecartEntreSpectacles) ?
+                            <input type="time" name="ecartEntreSpectacles" value="<?php
+                            echo isset($ecartEntreSpectacles) ?
                                 $ecartEntreSpectacles :
                                 "";
-                            ?>"
-                                class="input-style">
+                            ?>" class="input-style">
                         </div>
                     </div>
                     <div class="container-fluid footer">
