@@ -6,7 +6,7 @@ services:
         container_name: SAE_S3_DevWeb_app
         working_dir: /app/
         ports:
-            - 8080:80
+            - 8081:80
         volumes:
             - ./:/app/
     SAE_S3_DevWeb_db:
