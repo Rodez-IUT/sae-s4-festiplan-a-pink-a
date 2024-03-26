@@ -41,7 +41,6 @@ class GrijControleur
         $message = null;
         $stmt = $this->grijModele->recupererParametresGrij($pdo, $idFestival);
         $row = $stmt->fetch();
-        var_dump($row);
         if ($row) {
             $vue->setVar('heureDebut', $row['heureDebut']);
             $vue->setVar('heureFin', $row['heureFin']);

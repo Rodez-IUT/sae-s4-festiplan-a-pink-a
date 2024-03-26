@@ -202,7 +202,7 @@ class SpectacleModele
             OFFSET :nPage";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam("id",$idOrganisateur);
-        $stmt->bindParam("nPage",$premier,PDO::PARAM_INT);
+        $stmt->bindParam("nPage",$premierElement,PDO::PARAM_INT);
         $stmt->execute();
         return $stmt;
     }

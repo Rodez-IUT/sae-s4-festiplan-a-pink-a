@@ -41,7 +41,6 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         </div>
     </div>
 </header>
-<?php var_dump(get_defined_vars()); ?>
 <body class="body-blanc">
     <div class="padding">
         <div class="row">

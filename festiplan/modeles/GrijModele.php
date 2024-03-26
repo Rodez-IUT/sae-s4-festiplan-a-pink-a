@@ -139,14 +139,14 @@ class GrijModele
      * @param int $idJour L'id du jour où on ajoute un spectacle.
      * @param int $idSpectacle L'id du spectacle qu'on ajoute dans la planification.
      * @param int $ordre Le numero de la place qu'occupe le spectacle dans la journé.
-     * @param bool $place Indique si le spectacle est placé ou non dans la planification.
+     * @param int $place Indique si le spectacle est placé ou non dans la planification.
      * @param string $heureDebut L'heure de début du spectacle dans la journé.
      * @param string $heureFin L'heure de fin du spectacle dans la journé.
      * @param string $causeNonPlace Si le spectacle n'est pas placé alors cette valeur indique
      * pour qu'elle raison il n'est pas placé.
      */
-    public function insertSpectaclesParJour(PDO $pdo,$idFestival, int $idJour, int $idSpectacle, int $ordre, bool $place,
-                                            string $heureDebut, string $heureFin, ?string $causeNonPlace)
+    public function insertSpectaclesParJour(PDO $pdo,$idFestival, ?int $idJour, int $idSpectacle, int $ordre, int $place,
+                                            ?string $heureDebut, ?string $heureFin, ?string $causeNonPlace)
     {
         $sql = "INSERT INTO SpectaclesJour VALUES (?,?,?,?,?,?,?,?)";
         $stmt = $pdo->prepare($sql);
