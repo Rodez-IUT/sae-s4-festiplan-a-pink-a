@@ -22,6 +22,42 @@ class FestivalModele
     }
 
     /**
+     * Vérifie les droits d'un organisateur sur un festival
+     * @param PDO $pdo l'objet PDO
+     * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut vérifier les droits
+     * @param int $idFestival l'identifiant du festival à vérifier
+     * @return int|null 1 si
+     */
+    public function verifierDroitSurFestival(PDO $pdo, int $idUtilisateur, int $idFestival) :int|null {
+        try {
+            $requete = "SELECT idUtilisateur
+                        FROM EquipeOrganisatrice
+                        WHERE idUtilisateur = :user
+                        AND idFestival = :festival";
+            $stmt = $pdo -> prepare($requete);
+            $stmt -> bindValue("user", $idUtilisateur);
+            $stmt -> bindValue("festival", $idFestival);
+            $stmt -> execute();
+            return $stmt -> fetch();
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public int $DROIT_RESPONSABLE = 1;
+    public int $DROIT_ORGANISATEUR = 0;
+    public ?int $DROIT_AUCUN = null;
+
+    public function estOrganisateur(PDO $pdo, int $idUtilisateur, int $idFestival) :bool {
+        return $this->verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival) !== $this->DROIT_AUCUN;
+    }
+
+    /*
+    public function estResponsable(PDO $pdo, int $idUtilisateur, int $idFestival) :bool {
+        return $this->verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival) == $this->DROIT_RESPONSABLE;
+    }*/
+
+    /**
      * Insere un festival dans la base de données
      * @param PDO $pdo un objet PDO connecté à la base de données.
      * @param string $nom nom du festival.
@@ -181,6 +217,7 @@ class FestivalModele
         $stmt2->bindParam("id",$idFestival);
         $stmt2->execute();
     }
+
 
     /**
      * Regarde si l'utilisateur et le responsable du festival voulus.

@@ -24,7 +24,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 </a>
             </div>
             <div class="col-8">
-                <h2 class="texteCentre blanc bas"> Ajouter des organisateurs : </h2>
+                <h2 class="texteCentre blanc bas"> Ajouter des organisateurs</h2>
             </div>
             <div class="col-1 col-md-2 text-right"> <!-- Ajoutez la classe text-right pour aligner à droite -->
                 <!-- Icône utilisateur avec menu déroulant -->
@@ -53,7 +53,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <br>
         <h1>Liste des Organisateurs : </h1><br>
         <?php
-        if (isset($organisateurIDs, $listeOrganisateur, $listeUtilisateur, $idResponsable)){
+        if (isset($listeOrganisateur, $listeUtilisateur, $idResponsable)){
             // Charger tous les résultats de la liste des organisateurs dans un tableau
             $organisateurIDs = array();
             while ($row2 = $listeOrganisateur->fetch()) {
@@ -70,7 +70,6 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                        // Vérifier si l'utilisateur est dans la liste des organisateurs
                        if (in_array($row['idUtilisateur'], $organisateurIDs)) {
                            echo 'checked';
-
                        }
                        // Rend le responsable impossible a uncheck
                        if ($row['idUtilisateur'] == $idResponsable) {
