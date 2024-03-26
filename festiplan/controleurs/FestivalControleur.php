@@ -189,8 +189,10 @@ class FestivalControleur {
         $idResponsable = $_SESSION['id_utilisateur'];
         $idFestival = HttpHelper::getParam('idFestival');
 
-        $chipi_chipi = $this -> festivalModele -> verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival);
+        //$chipi_chipi = $this -> festivalModele -> verifierDroitSurFestival($pdo, $idResponsable, $idFestival);
         //var_dump($chipi_chipi);
+        $chapa_chapa = $this -> festivalModele -> estResponsable($pdo, $idFestival, $idResponsable);
+        var_dump($chapa_chapa);
         if ($chipi_chipi){
             // Recupere les données du festival séléctionné
             $festival = $this->festivalModele->leFestival($pdo,$idFestival);
