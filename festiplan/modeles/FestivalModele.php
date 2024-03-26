@@ -26,7 +26,7 @@ class FestivalModele
      * @param PDO $pdo l'objet PDO
      * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut vérifier les droits
      * @param int $idFestival l'identifiant du festival à vérifier
-     * @return int|null 1 si
+     * @return int|null 1 si l'utilisateur est responsable, 1 s'il est organisateur, null s'il n'a aucun droit
      */
     public function verifierDroitSurFestival(PDO $pdo, int $idUtilisateur, int $idFestival) :int|null {
         try {
@@ -48,7 +48,13 @@ class FestivalModele
     public int $DROIT_ORGANISATEUR = 0;
     public ?int $DROIT_AUCUN = null;
 
-    public function estOrganisateur(PDO $pdo, int $idUtilisateur, int $idFestival) :bool {
+    /**
+     * @param PDO $pdo
+     * @param int $idFestival
+     * @param int $idUtilisateur
+     * @return bool
+     */
+    public function estOrganisateur(PDO $pdo, int $idFestival, int $idUtilisateur) :bool {
         return $this->verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival) !== $this->DROIT_AUCUN;
     }
 
@@ -56,6 +62,23 @@ class FestivalModele
     public function estResponsable(PDO $pdo, int $idUtilisateur, int $idFestival) :bool {
         return $this->verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival) == $this->DROIT_RESPONSABLE;
     }*/
+
+    /**
+     * Regarde si l'utilisateur et le responsable du festival voulus.
+     * @param PDO $pdo un objet PDO connecté à la base de données.
+     * @param int $idFestival l'id du festival.
+     * @param int $idOrganisateur l'id de l'organisateur.
+     */
+    public function estResponsable($pdo,$idFestival,$idOrganisateur)
+    {
+        $sql = "SELECT responsable FROM EquipeOrganisatrice WHERE idFestival =:idFestival AND idUtilisateur =:idUtilisateur";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam("idFestival",$idFestival);
+        $stmt->bindParam("idUtilisateur",$idOrganisateur);
+        $stmt->execute();
+        $fetch = $stmt->fetch();
+        return $fetch;
+    }
 
     /**
      * Insere un festival dans la base de données
@@ -218,23 +241,6 @@ class FestivalModele
         $stmt2->execute();
     }
 
-
-    /**
-     * Regarde si l'utilisateur et le responsable du festival voulus.
-     * @param PDO $pdo un objet PDO connecté à la base de données.
-     * @param int $idFestival l'id du festival.
-     * @param int $idOrganisateur l'id de l'organisateur.
-     */
-    public function estResponsable($pdo,$idFestival,$idOrganisateur)
-    {
-        $sql = "SELECT responsable FROM EquipeOrganisatrice WHERE idFestival =:idFestival AND idUtilisateur =:idUtilisateur";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam("idFestival",$idFestival);
-        $stmt->bindParam("idUtilisateur",$idOrganisateur);
-        $stmt->execute();
-        $fetch = $stmt->fetch();
-        return $fetch;
-    }
 
     /**
      * Renvoie la liste des organisateur du festival voulus.
