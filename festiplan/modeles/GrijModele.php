@@ -146,7 +146,7 @@ class GrijModele
      * pour qu'elle raison il n'est pas placé.
      */
     public function insertSpectaclesParJour(PDO $pdo,$idFestival, int $idJour, int $idSpectacle, int $ordre, bool $place,
-                                            string $heureDebut, string $heureFin, string $causeNonPlace)
+                                            string $heureDebut, string $heureFin, ?string $causeNonPlace)
     {
         $sql = "INSERT INTO SpectaclesJour VALUES (?,?,?,?,?,?,?,?)";
         $stmt = $pdo->prepare($sql);
