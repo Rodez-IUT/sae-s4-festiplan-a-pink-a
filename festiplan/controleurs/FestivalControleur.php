@@ -190,7 +190,7 @@ class FestivalControleur {
         $idFestival = HttpHelper::getParam('idFestival');
 
         $chipi_chipi = $this -> festivalModele -> verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival);
-        var_dump($chipi_chipi);
+        //var_dump($chipi_chipi);
         if ($chipi_chipi){
             // Recupere les données du festival séléctionné
             $festival = $this->festivalModele->leFestival($pdo,$idFestival);
