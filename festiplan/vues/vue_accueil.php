@@ -3,10 +3,6 @@
 if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte'] == false) {
     header("Location: ../index.php");
 }
-// Règle par défaut :
-if (!isset($afficherSpectacles)){
-    $afficherSpectacles = false;
-}
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +26,7 @@ if (!isset($afficherSpectacles)){
             </div>
             <div class="col-8">
                 <h2 class="texteCentre blanc bas">
-                    <?php if ($afficherSpectacles) {
+                    <?php if ($afficher) {
                         echo 'Mes spectacles';
                     } else {
                         echo 'Mes festivals';
@@ -57,7 +53,7 @@ if (!isset($afficherSpectacles)){
     <div class="container-fluid">
         <?php
         // Affichage de la liste des spectacles
-        if ($afficherSpectacles && isset($mesSpectacles)) {
+        if ($afficher) {
             if ($mesSpectacles->rowCount() > 0) {
                 ?>
 
@@ -128,7 +124,6 @@ if (!isset($afficherSpectacles)){
                     <?php }?>
                 </div>
                 <?php
-                }
             } else {
                 echo '<div class="col-12">';
                 echo '<div class="centre">';
@@ -136,7 +131,7 @@ if (!isset($afficherSpectacles)){
                 echo '</div>';
                 echo '</div>';
             }
-        } else if (isset($mesFestivals, $lesResponsables)){
+        } else {
             if ($mesFestivals->rowCount() > 0) {
                 //affichage de la liste des festivals
                 while ($festival = $mesFestivals->fetch()) {
@@ -173,9 +168,7 @@ if (!isset($afficherSpectacles)){
 
                     <?php
                 }
-                if (isset($nbPages)) {
                 ?>
-<<<<<<< HEAD
                 <div class="pagination">
                 <?php if(isset($_GET["page"]) && $_GET["page"]>1){?>
                     <a  href="?controller=Home&page=1&afficher=<?php echo $afficher; ?>">
@@ -200,17 +193,7 @@ if (!isset($afficherSpectacles)){
                     </a>
                     <?php }?>
                 </div>
-=======
-                    <div class="pagination">
-                        <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
-                            <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficherSpectacles; ?>">
-                                <?php echo $page; ?>
-                            </a>
-                        <?php } ?>
-                    </div>
->>>>>>> 797249dfea9319be575820a84f5954e832c8955f
                 <?php
-                }
             } else {
                 echo '<div class="col-12">';
                 echo '<div class="centre">';
@@ -229,12 +212,12 @@ if (!isset($afficherSpectacles)){
                             class="fas fa-solid fa-plus"></span><b> Spectacle</b></button></a>
             </div>
             <div class="col-4">
-                <a href="?controller=Accueil&action=<?php if ($afficherSpectacles) {
+                <a href="?controller=Accueil&action=<?php if ($afficher) {
                     echo 'voirFestival';
                 } else {
                     echo 'VoirSpectacle';
                 } ?>"><button type="submit" class="btn btn-secondary btnModif fondGris">
-                        <?php if ($afficherSpectacles) {
+                        <?php if ($afficher) {
                             echo '<b>Voir mes festivals</b>';
                         } else {
                             echo '<b>Voir mes spectacles</b>';

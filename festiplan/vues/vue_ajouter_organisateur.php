@@ -53,7 +53,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <br>
         <h1>Liste des Organisateurs : </h1><br>
         <?php
-        if (isset($organisateurIDs, $listeOrganisateur, $listeUtilisateur, $idResponsable)){
+        if (isset( $listeOrganisateur, $listeUtilisateur, $idResponsable)){
             // Charger tous les résultats de la liste des organisateurs dans un tableau
             $organisateurIDs = array();
             while ($row2 = $listeOrganisateur->fetch()) {

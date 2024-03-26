@@ -50,7 +50,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <input type="hidden" name="action" value="nouveauSpectacle">
         <input type="hidden" name="modifier" value="true">
         <?php if(isset($idSpectacle)) { ?>
-            input type = "hidden" name = "idSpectacle" value = "<?php echo $idSpectacle ?>" >
+            <input type = "hidden" name = "idSpectacle" value = "<?php echo $idSpectacle ?>" >
         <?php }?>
         <div class="padding">
             <div class="row">

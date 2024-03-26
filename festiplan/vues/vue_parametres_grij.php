@@ -68,10 +68,11 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             <label for="heureDebut">Heure de début :</label>
                         </div>
                         <div class="col-12">
-                            <?php if(isset($heureDebut)) { ?>
-                            <input type="time" name="heureDebut" value="<?php echo $heureDebut; ?>"
-                            <?php } ?>
-                                class="input-style" />
+                            <input type="time" name="heureDebut" value=" <?php echo isset($heureFin) ?
+                                $heureFin :
+                                ""; ?>"
+                                   class="input-style" />
+                               
                         </div>
                         <br>
                         <div class="col-12">

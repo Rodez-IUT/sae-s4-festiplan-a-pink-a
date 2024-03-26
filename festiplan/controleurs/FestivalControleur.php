@@ -160,6 +160,7 @@ class FestivalControleur {
         $supprimerFestival = $this->festivalModele->supprimerFestival($pdo, $idFestival);
         // On détermine sur quelle page on se trouve
         if(isset($_GET['page']) && !empty($_GET['page'])){
+            
             $pageActuelle = (int) strip_tags($_GET['page']);
         }else{
             $pageActuelle = 1;
@@ -265,8 +266,8 @@ class FestivalControleur {
         }
         // On Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
-
-        $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
+        var_dump($recherche);
+        $nbSpectacles = (int) $this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
         // Calcul du 1er element de la page
