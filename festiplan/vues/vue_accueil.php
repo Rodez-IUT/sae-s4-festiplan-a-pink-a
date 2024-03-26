@@ -94,13 +94,34 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     </div>
                     <?php
                 }
+                
                 ?>
+                
                 <div class="pagination">
-                    <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
-                        <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficher; ?>">
-                            <?php echo $page; ?>
+                <?php if(isset($_GET["page"]) && $_GET["page"]>1){?>
+                    <a  href="?controller=Home&page=1&afficher=<?php echo $afficher; ?>">
+                        &laquo; 
                         </a>
-                    <?php } ?>
+                        
+                        <a  href="?controller=Home&page=<?php if(isset($_GET["page"])){echo $_GET["page"]-1;}else{echo "1";}?>&afficher=<?php echo $afficher; ?>">
+                        &lsaquo;
+                        </a>
+                <?php }?>
+                   
+                    <a class="Actuel">
+                        <?php if(isset($_GET["page"])){echo $_GET["page"];}else{echo "1";} ?>
+                    </a>
+                    
+                    <?php if((!isset($_GET["page"]) || $_GET["page"]<$nbPages ) && $nbPages !=1){?>
+                    <a href="?controller=Home&page=<?php if(isset($_GET["page"])){echo $_GET["page"]+1;
+                    }else{echo "2";}?>&afficher=<?php echo $afficher; ?>">
+                    &rsaquo;
+                        </a>
+                    
+                        <a href="?controller=Home&page=<?php echo $nbPages?>&afficher=<?php echo $afficher; ?>">
+                        &raquo;
+                    </a>
+                    <?php }?>
                 </div>
                 <?php
             } else {
@@ -112,9 +133,6 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
             }
         } else {
             if ($mesFestivals->rowCount() > 0) {
-                ?>
-
-                <?php
                 //affichage de la liste des festivals
                 while ($festival = $mesFestivals->fetch()) {
                     $idFestival = $festival['idFestival'];
@@ -152,11 +170,28 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 }
                 ?>
                 <div class="pagination">
-                    <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
-                        <a href="?controller=Home&page=<?php echo $page; ?>&afficher=<?php echo $afficher; ?>">
-                            <?php echo $page; ?>
+                <?php if(isset($_GET["page"]) && $_GET["page"]>1){?>
+                    <a  href="?controller=Home&page=1&afficher=<?php echo $afficher; ?>">
+                        &laquo; 
                         </a>
-                    <?php } ?>
+                        
+                        <a  href="?controller=Home&page=<?php if(isset($_GET["page"])){echo $_GET["page"]-1;}else{echo "1";}?>&afficher=<?php echo $afficher; ?>">
+                        &lsaquo;
+                        </a>
+                <?php }?>
+                    <a class="Actuel">
+                        <?php if(isset($_GET["page"])){echo $_GET["page"];}else{echo "1";} ?>
+                    </a>
+
+                    <?php if((!isset($_GET["page"]) || $_GET["page"]<$nbPages ) && $nbPages !=1){?>
+                    <a href="?controller=Home&page=<?php if(isset($_GET["page"])){echo $_GET["page"]+1;}else{echo "2";}?>&afficher=<?php echo $afficher; ?>">
+                    &rsaquo;
+                        </a>
+                    
+                        <a href="?controller=Home&page=<?php echo $nbPages?>&afficher=<?php echo $afficher; ?>">
+                        &raquo;
+                    </a>
+                    <?php }?>
                 </div>
                 <?php
             } else {
@@ -169,6 +204,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         }
         ?>
     </div>
+    
     <div class="container-fluid footer">
         <div class="row">
             <div class="col-4">

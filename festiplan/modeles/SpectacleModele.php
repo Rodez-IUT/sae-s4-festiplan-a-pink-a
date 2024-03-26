@@ -66,7 +66,7 @@ class SpectacleModele
             $stmt2->bindParam("idSpectacle",$idSpectacle);
             $stmt2->execute();
         } catch (PDOException $e) {
-            
+            echo $e;
         }
     }
 

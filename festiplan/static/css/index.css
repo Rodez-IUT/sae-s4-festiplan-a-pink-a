@@ -507,7 +507,7 @@ label {
     border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
-  
+
 .pagination a:hover {
     background-color: #007bff;
     color: #fff;
@@ -593,3 +593,8 @@ label {
 .barreRecherche {
     margin-left:30px;
 }
+
+.Actuel{
+    background-color: #007bff !important;
+    color: #fff !important;
+ } 

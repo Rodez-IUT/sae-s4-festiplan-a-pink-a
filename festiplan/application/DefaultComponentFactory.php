@@ -80,6 +80,8 @@ class DefaultComponentFactory implements ComponentFactory
         return new GrijControleur($this->buildServiceByName("Grij"));
     }
 
+   
+
     private function buildUserModele() : UserModele
     {
         if ($this->userModele == null) {
@@ -112,4 +114,5 @@ class DefaultComponentFactory implements ComponentFactory
         }
         return $this->grijModele;
     }
+    
 }

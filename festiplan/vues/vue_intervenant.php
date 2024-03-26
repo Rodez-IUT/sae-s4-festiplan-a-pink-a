@@ -112,8 +112,15 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             class="fas fa-solid fa-plus"></span><b> Intervenant</b></button></a>
             </div>
             <div class="col-4">
-                <button type="button" class="btn btn-success btnModif fondVert"><span
+                <form action="index.php" method="post">
+                    <button type="submit" class="btn btn-success btnModif fondVert"><span
                         class="fas fa-solid fa-plus"></span><b> Lot Intervenant</b></button>
+                    <input type="hidden" name="action" value="ajouter10000Intervenant">
+                    <input type="hidden" name="controller" value="Spectacle">
+                    <input type="hidden" name="idSpectacle" value="<?php echo $idSpectacle; ?>">
+                    
+                </form>
+               
             </div>
         </div>
     </div>
