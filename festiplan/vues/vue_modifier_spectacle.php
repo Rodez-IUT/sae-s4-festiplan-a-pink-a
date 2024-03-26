@@ -25,7 +25,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 </a>
             </div>
             <div class="col-8">
-                <h2 class="texteCentre blanc bas"> Modifier un spectacle : </h2>
+                <h2 class="texteCentre blanc bas">Modifier un spectacle</h2>
             </div>
             <div class="col-1 col-md-2 text-right"> <!-- Ajoutez la classe text-right pour aligner à droite -->
                 <!-- Icône utilisateur avec menu déroulant -->
@@ -50,7 +50,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <input type="hidden" name="action" value="nouveauSpectacle">
         <input type="hidden" name="modifier" value="true">
         <?php if(isset($idSpectacle)) { ?>
-            input type = "hidden" name = "idSpectacle" value = "<?php echo $idSpectacle ?>" >
+            <input type = "hidden" name = "idSpectacle" value = "<?php echo $idSpectacle ?>" >
         <?php }?>
         <div class="padding">
             <div class="row">

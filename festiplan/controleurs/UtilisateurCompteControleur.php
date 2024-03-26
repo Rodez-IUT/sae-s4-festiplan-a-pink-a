@@ -57,7 +57,7 @@ class UtilisateurCompteControleur
 
             $vue = new View("vues/vue_accueil");
             $vue->setVar("nbPages", $nbPages);
-            $vue->setVar("afficher", false);
+            $vue->setVar("afficherSpectacles", false);
             $vue->setVar("mesFestivals", $mesFestivals);
             $vue->setVar("lesResponsables", $lesResponsables);
             return $vue;

@@ -24,7 +24,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 </a>
             </div>
             <div class="col-8">
-                <h2 class="texteCentre blanc bas"> Paramétrage de la plannification </h2>
+                <h2 class="texteCentre blanc bas"> Paramétrage de la planification </h2>
             </div>
             <div class="col-1 col-md-2 text-right"> <!-- Ajoutez la classe text-right pour aligner à droite -->
                 <!-- Icône utilisateur avec menu déroulant -->
@@ -68,10 +68,9 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                             <label for="heureDebut">Heure de début :</label>
                         </div>
                         <div class="col-12">
-                            <?php if(isset($heureDebut)) { ?>
-                            <input type="time" name="heureDebut" value="<?php echo $heureDebut; ?>"
-                            <?php } ?>
-                                class="input-style" />
+                            <input type="time" name="heureDebut" value="
+                                <?php if (isset($heureDebut)){ echo $heureDebut; }?>"
+                                   class="input-style" />
                         </div>
                         <br>
                         <div class="col-12">
