@@ -5,6 +5,7 @@ namespace modeles;
 use PDOException;
 use PDO;
 use PDOStatement;
+use PHPUnit\Exception;
 
 class SpectacleModele 
 {
@@ -34,6 +35,32 @@ class SpectacleModele
         $search_stmt = $pdo->prepare($sql);
         $search_stmt->execute();
         return $search_stmt;
+    }
+
+    /**
+     * Vérifie que l'utilisateur
+     * @param int $idUtilisateur l'identifiant de l'utilisateur qui cherche à modifier le spectacle
+     * @param int $idSpectacle l'identifiant du spectacle qu'on cherche à modifier
+     * @return bool true si l'utilisateur a les droits sur ce spectacle, false sinon
+     */
+    public function verifierDroitSurSpectacle(PDO $pdo, int $idUtilisateur, int $idSpectacle) :bool {
+        try {
+            $requete = "SELECT Utilisateur.idUtilisateur
+                        FROM Utilisateur
+                        JOIN SpectacleOrganisateur
+                        ON Utilisateur.idUtilisateur = SpectacleOrganisateur.idUtilisateur
+                        JOIN Spectacle
+                        ON SpectacleOrganisateur.idSpectacle = Spectacle.idSpectacle
+                        WHERE Utilisateur.idUtilisateur = :user
+                        AND Spectacle.idSpectacle = :spectacle";
+            $stmt = $pdo -> prepare($requete);
+            $stmt -> bindValue("user", $idUtilisateur);
+            $stmt -> bindValue("spectacle", $idSpectacle);
+            $stmt -> execute();
+            return $stmt ->rowCount() != 0;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
     /**
@@ -217,11 +244,11 @@ class SpectacleModele
      * @param string $nom le nom de l'intervenant
      * @param string $prenom le prénom de l'intervenant
      * @param string $mail le mail de l'intervenant
-     * @param bool $surScene l'intervenant est sur ou hors scene
+     * @param int $surScene l'intervenant est sur ou hors scene
      * @param string $typeIntervenant pour récupérer le métier de l'intervenant
      * @return bool en fonction de la réussite de la transaction
      */
-    public function insertionIntervenant(PDO $pdo, int $idSpectacle, string $nom, string $prenom, string $mail, bool $surScene,
+    public function insertionIntervenant(PDO $pdo, int $idSpectacle, string $nom, string $prenom, string $mail, int $surScene,
                                          string $typeIntervenant):bool
     {
         try {
@@ -239,6 +266,8 @@ class SpectacleModele
             $pdo ->commit();
             return true;
         } catch (PDOException $e) {
+            echo "Sur scène : ";
+            var_dump($surScene);
             $pdo -> rollBack();
             return false;
         }
@@ -351,10 +380,10 @@ class SpectacleModele
      * @param string $mail pour récuperer le mail de l'intervenant
      * @param $surScene pour savoir si l'intervenant est sur ou hors scene
      * @param $typeIntervenant pour récupérer le métier de l'intervenant
-     * @return array les données de l'intervenant
+     * @return bool les données de l'intervenant
      */
     public function existeIntervenant(PDO $pdo, int $idSpectacle, string $nom, string $prenom, string $mail, $surScene,
-                                      $typeIntervenant) : array
+                                      $typeIntervenant) : bool
     {
         $sql = "SELECT idSpectacle,nom,prenom,mail,surScene,typeIntervenant 
                 FROM Intervenant 
@@ -373,8 +402,7 @@ class SpectacleModele
         $stmt->bindParam("typeIntervenant",$typeIntervenant);
         $stmt->execute();
         $fetch = $stmt->fetch();
-        return $fetch;
-
+        return $fetch != false;
     }
 
     /**

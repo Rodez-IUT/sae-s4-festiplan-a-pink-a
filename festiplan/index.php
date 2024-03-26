@@ -6,6 +6,8 @@ use application\DefaultComponentFactory;
 use yasmf\DataSource;
 use yasmf\Router;
 
+session_start();
+
 $dataSource = new DataSource(
     $host = 'SAE_S3_DevWeb_db',
     $port = '3306', 

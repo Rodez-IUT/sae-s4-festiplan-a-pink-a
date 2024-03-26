@@ -25,7 +25,7 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 </a>
             </div>
             <div class="col-8">
-                <h2 class="texteCentre blanc bas"> Modifier un spectacle : </h2>
+                <h2 class="texteCentre blanc bas">Modifier un spectacle</h2>
             </div>
             <div class="col-1 col-md-2 text-right"> <!-- Ajoutez la classe text-right pour aligner à droite -->
                 <!-- Icône utilisateur avec menu déroulant -->
