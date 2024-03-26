@@ -45,15 +45,17 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 </header>
 
 <body class="body-blanc">
-    </br>
+    <br>
     <form action="index.php" method="post">
         <input type="hidden" name="controller" value="Festival">
         <input type="hidden" name="action" value="rechercheSpectacle">
-        <input type="hidden" name="idFestival" value="<?php echo $idFestival; ?>">
-        <div class="col-12 barreRecherche">
-            <input type="text" name="recherche" value="<?php echo $derniereRecherche; ?>">
-            <input type="submit" value="Rechercher">
-        </div>
+        <?php if(isset($idFestival, $derniereRecherche)) {?>
+            <input type="hidden" name="idFestival" value="<?php echo $idFestival; ?>">
+            <div class="col-12 barreRecherche">
+                <input type="text" name="recherche" value="<?php echo $derniereRecherche; ?>">
+                <input type="submit" value="Rechercher">
+            </div>
+        <?php }?>
     </form>
 
     <form action="index.php" method="post">
@@ -61,11 +63,14 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
         <input type="hidden" name="controller" value="Festival">
         <input type="hidden" name="action" value="modifierListeSpectacle">
 
-        <input type="hidden" name="idFestival" value="<?php echo $idFestival; ?>">
+        <?php if(isset($idFestival)) { ?>
+            <input type="hidden" name="idFestival" value="<?php echo $idFestival; ?>">
+        <?php }?>
         <div class="col-12">
 
             <?php
-            if ($listeSpectacles->rowCount() > 0) {
+            if (isset($listeSpectacles, $listeSpectacleDeFestival, $pageActuelle,$derniereRecherche, $idFestival)
+                    && $listeSpectacles->rowCount() > 0) {
                 // Charge tout les résultats de la liste des spectacles du fetival dans un tableau
                 $spectacleIDs = array();
                 while ($row = $listeSpectacleDeFestival->fetch()) {
@@ -99,12 +104,15 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                 }
                 ?>
                 <div class="pagination">
-                    <?php for ($page = 1; $page <= $nbPages; $page++) { ?>
-                        <a
-                            href="?controller=Festival&action=modifierListeSpectacleFestival&page=<?php echo $page; ?>&idFestival=<?php echo $idFestival; ?>&derniereRecherche=<?php echo $derniereRecherche; ?>">
-                            <?php echo $page; ?>
-                        </a>
+                    <?php
+                    if (isset($nbPages)) {
+                        for ($page = 1; $page <= $nbPages; $page++) { ?>
+                            <a
+                                href="?controller=Festival&action=modifierListeSpectacleFestival&page=<?php echo $page; ?>&idFestival=<?php echo $idFestival; ?>&derniereRecherche=<?php echo $derniereRecherche; ?>">
+                                <?php echo $page; ?>
+                            </a>
                     <?php }
+                    }
             } else {
                 echo '<div class="col-12">';
                 echo '<div class="centre">';
@@ -116,8 +124,10 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 
         </div>
         <div class="footer">
+            <?php if (isset($idFestival)){ ?>
             <a href="?controller=Festival&action=afficherFestival&idFestival=<?php echo $idFestival; ?>"><button
                     type="button" class="btn btn-gris">Retour</button></a>
+            <?php }?>
         </div>
     </form>
     <script src="js/script.js"></script>

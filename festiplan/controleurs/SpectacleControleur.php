@@ -12,11 +12,8 @@ class SpectacleControleur {
 
     private SpectacleModele $spectacleModele;
 
-    private FestivalModele $festivalModele;
-
-    public function __construct(SpectacleModele $spectacleModele, FestivalModele $festivalModele) {
+    public function __construct(SpectacleModele $spectacleModele) {
         $this->spectacleModele = $spectacleModele;
-        $this->festivalModele = $festivalModele;
     }
     
     public function index(PDO $pdo): View {

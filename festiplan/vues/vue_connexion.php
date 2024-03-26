@@ -25,7 +25,7 @@ if (isset($_SESSION['utilisateur_connecte'])) {
                 <h2 class="grand">Connexion</h2>
                 <br>
                 <?php
-                echo (!$loginOuMdpOk) ? '<p id="invalide">Erreur : Le mot de passe ou le login est invalide.</p>' : '';
+                echo (isset($loginOuMdpOk) && !$loginOuMdpOk) ? '<p id="invalide">Erreur : Le mot de passe ou le login est invalide.</p>' : '';
                 ?>
                 <br>
 

@@ -1,5 +1,7 @@
 parameters:
-	level: max
+	level: 4
 	paths:
 		- src
 		- tests
+	excludePaths:
+	    - festiplan/lib

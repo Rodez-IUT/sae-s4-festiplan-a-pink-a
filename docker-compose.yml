@@ -26,8 +26,7 @@ services:
         image: phpmyadmin:latest
         container_name: pma
         working_dir: /pma/
+        ports:
+            - '8888:80'
         environment:
             - PMA_HOST=SAE_S3_DevWeb_db
-            - PMA_PORT=3306
-        ports:
-            - 8888:80

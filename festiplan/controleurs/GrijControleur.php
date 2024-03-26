@@ -3,6 +3,7 @@
 namespace controleurs;
 
 use PDO;
+use PDOStatement;
 use DateTime;
 use yasmf\View;
 use yasmf\HttpHelper;
@@ -19,7 +20,7 @@ class GrijControleur
     
     /**
      * Constructeur de l'objet GrijCOntroleur
-     * @param grijModele Objet GrijModele qui sert à communiquer avec la base
+     * @param GrijModele $grijModele Objet GrijModele qui sert à communiquer avec la base
      * de données.
      */
     public function __construct(GrijModele $grijModele)
@@ -29,8 +30,8 @@ class GrijControleur
 
     /**
      * Méthode par défaut du contrôleur.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @return vue La vue à afficher.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @return View La vue à afficher.
      */
     public function index(PDO $pdo)
     {
@@ -53,8 +54,8 @@ class GrijControleur
 
     /**
      * Enregistre une grij ou met à jour une grij déjà existante.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @return vue La vue à afficher.
+     * @param PDO$pdo Objet PDO connecté à la base de données.
+     * @return View La vue à afficher.
      */
     public function enregistrerGrij(PDO $pdo)
     {
@@ -118,20 +119,20 @@ class GrijControleur
 
     /**
      * Converti les heures en minutes.
-     * @param heure Les heures à convertir.
-     * @return temps Le résultat en minutes.
+     * @param string $heure Les heures à convertir.
+     * @return int Le résultat en minutes.
      */
-    private function convertirEnMinutes($heure) {
+    private function convertirEnMinutes(string $heure) {
         $temps = explode(":", $heure);
-        return $temps[0] * 60 + $temps[1];
+        return (int) $temps[0] * 60 + (int) $temps[1];
     }
 
     /**
      * Initialise les variables relatives aux heures de la vue.
-     * @param vue La vue où on initialise les variables.
-     * @param debut L'heure de début.
-     * @param fin L'heure de fin.
-     * @param ecart L'écart entre chaque spectacle (en heure).
+     * @param View $vue La vue où on initialise les variables.
+     * @param string $debut L'heure de début.
+     * @param string $fin L'heure de fin.
+     * @param string $ecart L'écart entre chaque spectacle (en heure).
      */
     private function initialiseHeuresSelectionnees($vue, $debut, $fin, $ecart)
     {
@@ -143,15 +144,16 @@ class GrijControleur
     /**
      * Planifie les spectacle du festivals par rapport au temps, au nombre de
      * jours, des scènes disponible et des spectacles.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @param idFestival L'id du festival que l'on planifie.
-     * @param spectacles la liste des spectacles à planifier.
-     * @param heureDebut L'heure de début d'une journé.
-     * @param heureFin L'heure de fin d'une journé.
-     * @param ecartEntreSpectacles L'écart entre deux spectacles dans une journé.
-     * @param jours La liste des jours d'un festival.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @param int $idFestival L'id du festival que l'on planifie.
+     * @param PDOStatement $spectacles la liste des spectacles à planifier.
+     * @param string $heureDebut L'heure de début d'une journé.
+     * @param string $heureFin L'heure de fin d'une journé.
+     * @param string $ecartEntreSpectacles L'écart entre deux spectacles dans une journée
+     * @param PDOStatement $jours La liste des jours d'un festival.
      */
-    private function planifierSpectacles(PDO $pdo, $idFestival,$spectacles,$heureDebut, $heureFin, $ecartEntreSpectacles, $jours)
+    private function planifierSpectacles(PDO $pdo, int $idFestival, PDOStatement $spectacles, string $heureDebut, string $heureFin,
+                                         string $ecartEntreSpectacles, PDOStatement $jours)
     {
         // Calcule de la durée d'une journé en minute
         $dureeTotal = $this->convertirEnMinutes($heureFin) - $this->convertirEnMinutes($heureDebut);
@@ -216,24 +218,26 @@ class GrijControleur
             }
         }
         // Ajoute les spectacles non ajoutés à la planification 
-        if ($spectacleNonPlace != null) {
+        if (isset ($spectacleNonPlace)) {
             $causeNonPlace = null;
             if($jour != false) {
                 $causeNonPlace = 1;
             } else {
                 $causeNonPlace = 2;
             }
-            $this->grijModele->insertSpectaclesParJour($pdo,$idFestival, null,$spectacleNonPlace['id'], 0, 0,null,null,$causeNonPlace);
+            $this->grijModele->insertSpectaclesParJour($pdo,$idFestival, null,$spectacleNonPlace['id'], 0,
+                0,null,null,$causeNonPlace);
             while ($unSpectacle = $spectacles->fetch()){
-                $this->grijModele->insertSpectaclesParJour($pdo,$idFestival, null,$unSpectacle['id'], 0, 0,null,null,$causeNonPlace);
+                $this->grijModele->insertSpectaclesParJour($pdo,$idFestival, null,$unSpectacle['id'], 0,
+                    0,null,null,$causeNonPlace);
             }
         }
     }
 
     /**
      * Affiche le profil du spectacle sélectionné dans la planification.
-     * @param pdo Objet PDO connecté à la base de données.
-     * @return vue La vue à afficher.
+     * @param PDO $pdo Objet PDO connecté à la base de données.
+     * @return View La vue à afficher.
      */
     public function profilSpectacleJour(PDO $pdo)
     {
@@ -259,10 +263,10 @@ class GrijControleur
 
     /**
      * Converti des heures en minutes.
-     * @param minutes La valeur en minute à convertir en heures.
-     * @return tempsMySQL Le résultat en heure compatible au type TIME en mySQL. 
+     * @param int $minutes La valeur en minute à convertir en heures.
+     * @return string Le résultat en heure compatible au type TIME en mySQL.
      */
-    public function convertirMinutesEnHeuresMySQL($minutes) {
+    public function convertirMinutesEnHeuresMySQL(int $minutes) {
         $heures = floor($minutes / 60);
         $minutesRestantes = $minutes % 60;
         $tempsFormate = new DateTime("1970-01-01 $heures:$minutesRestantes:00");

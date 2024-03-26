@@ -62,7 +62,7 @@ class DefaultComponentFactory implements ComponentFactory
     
     private function buildSpectacleController(): SpectacleControleur
     {
-        return new SpectacleControleur($this->buildServiceByName("Spectacle"),$this->buildServiceByName("Festival"));
+        return new SpectacleControleur($this->buildServiceByName("Spectacle"));
     }
     
     private function buildFestivalController(): FestivalControleur
@@ -72,7 +72,7 @@ class DefaultComponentFactory implements ComponentFactory
 
     private function buildUtilisateurCompteController() : UtilisateurCompteControleur
     {
-        return new UtilisateurCompteControleur($this->buildServiceByName("User"),$this->buildServiceByName("Spectacle"),$this->buildServiceByName("Festival"));
+        return new UtilisateurCompteControleur($this->buildServiceByName("User"),$this->buildServiceByName("Festival"));
     }
     
     private function buildGrijController() : GrijControleur

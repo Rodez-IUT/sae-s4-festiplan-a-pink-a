@@ -49,30 +49,32 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
 
         <input type="hidden" name="controller" value="Spectacle">
         <input type="hidden" name="action" value="nouveauIntervenant">
-        <input type="hidden" name="idSpectacle" value="<?php echo $idSpectacle ?>">
-        <input type="hidden" name="idIntervenant" value="<?php echo $idIntervenant ?>">
+        <?php
+        if (isset($idSpectacle)) { echo "<input type='hidden' name='idSpectacle' value='$idSpectacle'>";}
+        if (isset($idIntervenant)) { echo "<input type='hidden' name='idIntervenant' value='$idIntervenant'>";}
+        ?>
         <input type="hidden" name="modifier" value="true">
 
         <div class="padding">
             <?php
-            if ($existePas) {
+            if (isset($existePas) && $existePas) {
                 echo '<h3 id="invalide">Votre intervenant existe déja</h3>';
             }
             ?>
             <div class="row">
                 <div class="col-12">
                     <label name="nom">Nom de l'intervenant :</label><br>
-                    <input class="input-style" type="text" name="nom" value="<?php echo $nom ?>" required />
+                    <input class="input-style" type="text" name="nom" <?php echo isset($nom) ? "value='$nom'" : "";?> required />
                     <br>
                 </div>
                 <div class="col-12">
                     <label name="nom">Prénom de l'intervenant :</label><br>
-                    <input class="input-style" type="text" name="prenom" value="<?php echo $prenom; ?>" required />
+                    <input class="input-style" type="text" name="prenom" <?php echo isset($prenom) ? "value='$prenom'" : "";?> required />
                     <br>
                 </div>
                 <div class="col-12">
                     <label name="LabelEmail">Adresse mail :</label><br>
-                    <input class="input-style" type="email" name="email" value=<?php echo $mail ?> size="50" required />
+                    <input class="input-style" type="email" name="email" <?php echo isset($mail) ? "value='$mail'" : "";?> size="50" required />
                     <br>
                 </div>
                 <div class="col-12">
@@ -80,24 +82,26 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                     <select class="input-style" name="metierIntervenant" required>
                         <option disabled value="0">Choisissez le métier de l'intervenant</option>
                         <?php
-                        while ($row = $searchStmt->fetch()) { ?>
-                            <option value="<?php echo $row['idMetierIntervenant']; ?>" <?php if ($row['idMetierIntervenant'] == $ancienMetier) {
-                                  echo 'selected';
-                              } ?>>
-                                <?php echo $row['metier']; ?>
-                            </option>
-                            <?php
-                        }
+                            while (isset($searchStmt) && $row = $searchStmt->fetch()) { ?>
+                                <option value="<?php echo $row['idMetierIntervenant']; ?>"
+                                    <?php if (isset($ancienMetier) && $row['idMetierIntervenant'] == $ancienMetier) {
+                                      echo 'selected';
+                                  } ?>>
+                                    <?php echo $row['metier']; ?>
+                                </option>
+                                <?php
+                            }
                         ?>
                     </select>
                     <?php
-                    while ($row = $searchStmt->fetch()) { ?>
+                    while (isset($searchStmt) && $row = $searchStmt->fetch()) { ?>
                         <?php echo $row['idMetierIntervenant']; ?>
                         <?php
                     }
                     ?>
                     <br>
                 </div>
+                <?php if (isset($ancienSurScene)){ ?>
                 <div class="col-12">
                     <label>Intervenant sur ou hors scène :</label><br>
                     <select class="input-style" name="categorieIntervenant" required>
@@ -109,14 +113,21 @@ if (!isset($_SESSION['utilisateur_connecte']) || $_SESSION['utilisateur_connecte
                           } ?>>Hors Scène</option>
                     </select>
                 </div>
+                <?php }?>
             </div>
         </div>
         <div class="container-fluid footer">
             <div class="row">
                 <div class="col-6">
-                    <a href="?controller=Spectacle&action=afficherIntervenant&idSpectacle=<?php echo $idSpectacle; ?>"><button
-                            type="button" class="btn btn-secondary btnModif fondGris"><span
-                                class="fas fa-solid fa-arrow-left-long"></button></a>
+                    <?php
+                    if (isset($idSpectacle)){
+                        $url = "?controller=Spectacle&action=afficherIntervenant&idSpectacle=$idSpectacle"; ?>
+                        <a href="<?php echo $url ?>">
+                            <button type="button" class="btn btn-secondary btnModif fondGris">
+                                <span class="fas fa-solid fa-arrow-left-long">
+                            </button>
+                        </a>
+                    <?php }?>
                 </div>
                 <div class="col-6">
                     <button type="submit" class="btn btn-primary btnModif fondBleu"><span
