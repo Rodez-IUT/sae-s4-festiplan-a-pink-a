@@ -269,16 +269,11 @@ class FestivalControleur {
         }
         // On Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
-<<<<<<< HEAD
-        var_dump($recherche);
-        $nbSpectacles = (int) $this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
-=======
 
         if ($recherche == null) {
             $recherche = "";
         }
         $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
->>>>>>> f51d1a36710a7328896f63df64c0537fda6708f8
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
         // Calcul du 1er element de la page
