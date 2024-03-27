@@ -189,30 +189,22 @@ class FestivalControleur {
         $idResponsable = $_SESSION['id_utilisateur'];
         $idFestival = HttpHelper::getParam('idFestival');
 
-        //$chipi_chipi = $this -> festivalModele -> verifierDroitSurFestival($pdo, $idResponsable, $idFestival);
-        //var_dump($chipi_chipi);
-        $chapa_chapa = $this -> festivalModele -> estResponsable($pdo, $idFestival, $idResponsable);
-        var_dump($chapa_chapa);
-        if ($chipi_chipi){
-            // Recupere les données du festival séléctionné
-            $festival = $this->festivalModele->leFestival($pdo,$idFestival);
+        // Recupere les données du festival séléctionné
+        $festival = $this->festivalModele->leFestival($pdo,$idFestival);
 
-            // Recupere tout les utilisateurs
-            $listeUtilisateur = $this->festivalModele->listeUtilisateur($pdo);
-            // Recupere tout les organisateurActuel du festival
-            $listeOrganisateur = $this->festivalModele->listeOrganisateurFestival($pdo,$idFestival);
+        // Recupere tout les utilisateurs
+        $listeUtilisateur = $this->festivalModele->listeUtilisateur($pdo);
+        // Recupere tout les organisateurActuel du festival
+        $listeOrganisateur = $this->festivalModele->listeOrganisateurFestival($pdo,$idFestival);
 
-            $vue = new View("vues/vue_ajouter_organisateur");
-            $vue->setVar("nomFestival", $festival['titre']);
-            $vue->setVar("idFestival", $idFestival);
-            $vue->setVar("idResponsable", $idResponsable);
-            $vue->setVar("listeOrganisateur", $listeOrganisateur);
-            $vue->setVar("listeUtilisateur", $listeUtilisateur);
+        $vue = new View("vues/vue_ajouter_organisateur");
+        $vue->setVar("nomFestival", $festival['titre']);
+        $vue->setVar("idFestival", $idFestival);
+        $vue->setVar("idResponsable", $idResponsable);
+        $vue->setVar("listeOrganisateur", $listeOrganisateur);
+        $vue->setVar("listeUtilisateur", $listeUtilisateur);
 
-            return $vue;
-        }
-        header("Location: index.php");
-        exit();
+        return $vue;
     }
 
 
@@ -278,6 +270,9 @@ class FestivalControleur {
         // On Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
 
+        if ($recherche == null) {
+            $recherche = "";
+        }
         $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
