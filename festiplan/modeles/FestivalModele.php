@@ -45,12 +45,13 @@ class FestivalModele
     }
 
     /**
-     * Regarde si l'utilisateur et le responsable du festival voulus.
+     * Regarde si l'utilisateur est le responsable du festival voulus.
      * @param PDO $pdo un objet PDO connecté à la base de données.
      * @param int $idFestival l'id du festival.
      * @param int $idOrganisateur l'id de l'organisateur.
+     * @return bool true si l'utilisateur est responsable du festival, false sinon
      */
-    public function estResponsable($pdo,$idFestival,$idOrganisateur):array
+    public function estResponsable($pdo, $idFestival, $idOrganisateur):bool
     {
         $sql = "SELECT responsable 
                 FROM EquipeOrganisatrice 
@@ -60,7 +61,7 @@ class FestivalModele
         $stmt->bindParam("idFestival",$idFestival);
         $stmt->bindParam("idUtilisateur",$idOrganisateur);
         $stmt->execute();
-        $fetch = $stmt->fetch();
+        $fetch = $stmt->fetch()["responsable"] == 1;
         return $fetch;
     }
 
