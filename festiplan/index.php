@@ -10,10 +10,10 @@ session_start();
 
 $dataSource = new DataSource(
     $host = 'SAE_S3_DevWeb_db',
-    $port = '3306', 
-    $db = 'festiplanbfgi_sae', 
-    $user = 'root', 
-    $pass = 'root', 
+    $port = '3306',
+    $db = 'festiplanbfgi_sae',
+    $user = 'root',
+    $pass = 'root',
     $charset = 'utf8mb4'
 );
 

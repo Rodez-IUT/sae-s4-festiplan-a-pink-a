@@ -174,7 +174,7 @@ class FestivalControleur {
             $lesResponsables = $this->festivalModele->listeLesResponsables($pdo);
 
             $vue = new View("vues/vue_accueil");
-            $vue->setVar("afficherSpectacles", false);
+            $vue->setVar("afficher", false);
             $vue->setVar("nbPages", $nbPages);
             $vue->setVar("mesFestivals", $mesFestivals);
             $vue->setVar("lesResponsables", $lesResponsables);

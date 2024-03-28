@@ -44,7 +44,7 @@ class HomeController {
                 $lesResponsables = $this->festivalModele->listeLesResponsables($pdo);
 
                 $vue = new View("vues/vue_accueil");
-                $vue->setVar("afficherSpectacles", false);
+                $vue->setVar("afficher", false);
                 $vue->setVar("nbPages", $nbPages);
                 $vue->setVar("mesFestivals", $mesFestivals);
                 $vue->setVar("lesResponsables", $lesResponsables);
@@ -66,10 +66,10 @@ class HomeController {
                 $mesSpectacles = $this->spectacleModele->listeMesSpectacles($pdo,$idUtilisateur,$premier);
 
                 $vue = new View("vues/vue_accueil");
-                $vue->setVar("afficherSpectacles", true);
+                $vue->setVar("afficher", true);
                 $vue->setVar("mesSpectacles", $mesSpectacles);
                 $vue->setVar("nbPages", $nbPagesSpectacle);
-                $vue->setVar("afficherSpectacles",$afficher);
+                $vue->setVar("afficher",$afficher);
                 return $vue;
 
             }

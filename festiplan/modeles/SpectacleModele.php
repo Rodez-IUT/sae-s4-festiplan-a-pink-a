@@ -165,7 +165,7 @@ class SpectacleModele
      * @param PDO $pdo un objet PDO connecté à la base de données.
      * @param string $recherche le terme à chercher parmi les spectacles
      */
-    public function nombreSpectaclesRecherche (PDO $pdo, $recherche) :int
+    public function nombreSpectaclesRecherche (PDO $pdo, string $recherche) :int
     {
         $sql = "SELECT Count(idSpectacle) AS nbSpectacle 
                 FROM Spectacle 
@@ -214,7 +214,7 @@ class SpectacleModele
      * @param string $recherche le terme recherché dans le nom du spectacle
      * @return PDOStatement l'ensemble des festivals.
      */
-    public function listeSpectacles(PDO $pdo, int $premier,  $recherche)
+    public function listeSpectacles(PDO $pdo, int $premier, string $recherche)
     {
         $sql = "SELECT Spectacle.titre,Spectacle.idSpectacle,Spectacle.duree FROM Spectacle WHERE titre LIKE :terme LIMIT 4 OFFSET :nPage ";
         $stmt = $pdo->prepare($sql);

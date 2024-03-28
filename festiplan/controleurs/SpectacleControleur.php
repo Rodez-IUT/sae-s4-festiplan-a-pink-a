@@ -122,7 +122,6 @@ class SpectacleControleur {
             return $vue;
         }
     }
-    
 
     public function afficherSpectacle(PDO $pdo) : View {
         session_start();
