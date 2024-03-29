@@ -25,7 +25,7 @@
                 ];
                 self::$pdo = new PDO($ds_name, $user, $pass, $options);
                 $contenu = file_get_contents("./BD_SAE_TEST.sql");
-                if ($contenu != "") {
+                if (!empty($contenu)) {
                     self::$pdo->exec($contenu);
                 }
             } catch(\PDOException $e) {

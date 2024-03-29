@@ -1,6 +1,6 @@
 <?php
-    require 'json.php';
-    require 'service/fonctionsBd.php';
+    require_once('json.php');
+    require_once('service/fonctionsBd.php');
     try {
         // Récupère l'objet PDO
         $pdo = getPDO();
