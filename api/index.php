@@ -1,4 +1,13 @@
 <?php
+    $STATUS_CODE_SUCCESS = 200;
+    $STATUS_CODE_CREATED = 201;
+    $STATUS_CODE_BAD_REQUEST = 400;
+    $STATUS_CODE_UNAUTHORIZED = 401;
+    $STATUS_CODE_FORBIDDEN = 403;
+    $STATUS_CODE_NOT_FOUND = 404;
+    $STATUS_CODE_CONFLICT = 409;
+    $STATUS_CODE_CREATED = 500;
+
     require_once('json.php');
     require_once('service/fonctionsBd.php');
     try {
@@ -13,77 +22,17 @@
             array_shift($infos);
         }
         // Si l'utilisateur est valide (la clé est valide)
-        if ($utilisateur != 0) {
+        if ($utilisateur != false) {
             if (isset($infos[0]) && $infos[0] != '') {
                 switch ($_SERVER['REQUEST_METHOD']) {
                     case 'GET':
-                        switch ($infos[0]) {
-                            case "festivals":
-                                sendJSON(getListeFestival($pdo, $utilisateur), 200);
-                                break;
-                            case "festival":
-                                if (isset($infos[1])) {
-                                    sendJSON(getDetailsFestival($pdo, $infos[1]), 200);
-                                } else {
-                                    retourKO("Paramètre manquant", 404);
-                                }
-                                break;
-                            default :
-                                retourKO("Demande inconnue", 404);
-                        }
+                        traitementGET($pdo, $utilisateur, $infos);
                         break;
                     case 'POST':
-                        switch ($infos[0]) {
-                            case 'ajoutFavori':
-                                $donnees = json_decode(file_get_contents('php://input'), true);
-                                $res = ajouterFavori($pdo, $utilisateur, $donnees['idFestival']);
-                                switch ($res) {
-                                    case 0:
-                                        retourOK("Favori ajouté", 201);
-                                        break;
-                                    case 1452:
-                                        retourKO("Festival inexistant", 404);
-                                        break;
-                                    case 1062:
-                                        retourKO("Favori déjà existant", 409);
-                                        break;
-                                    case 1292:
-                                        retourKO("Données invalides", 400);
-                                        break;
-                                    default:
-                                        retourKO("Erreur inconnue", 500);
-                                }
-                                break;
-                            default :
-                                retourKO("Demande inconnue", 404);
-                        }
+                        traitementPOST($pdo, $utilisateur, $infos);
                         break;
                     case 'DELETE':
-                        switch ($infos[0]) {
-                            case "supprimerFavori":
-                                $donnees = json_decode(file_get_contents('php://input'), true);
-                                $res = supprimerFavori($pdo, $utilisateur, $donnees['idFestival']);
-                                switch($res) {
-                                    case 0:
-                                        retourOK("Favori supprimé", 200);
-                                        break;
-                                    case 1:
-                                        retourKO("Favori inexistant", 404);
-                                        break;
-                                    case 1292:
-                                        retourKO("Données invalides", 400);
-                                        break;
-                                    default:
-                                        retourKO("Erreur inconnue", 500);
-                                }
-                                break;
-                            case "logout":
-                                logout($pdo, $utilisateur);
-                                retourOK("Déconnexion réussie", 200);
-                                break;
-                            default :
-                                retourKO("Demande inconnue", 404);
-                        }
+                        traitementDELETE($pdo, $utilisateur, $infos);
                         break;
                     default:
                         retourKO("Méthode inconnue", 404);
@@ -92,26 +41,141 @@
                 retourKO("Demande inconnue", 404);
             }
         } else {
-            // Si l'utilisateur essaye de s'enregistrer
-            if ($infos[0] == "login" && $_SERVER['REQUEST_METHOD'] == 'GET') {
-                if (isset($infos[1]) && isset($infos[2])) {
-                    // enregistre l'utilisateur si valide et renvoie sa clé API
-                    $token = verifLoginPassword($pdo, $infos[1], $infos[2]);
-                    if ($token != "erreur") {
-                        $retour['cle'] = $token;
-                        sendJSON($retour, 200);
-                    } else {
-                        retourKO("Utilisateur inconnu", 404);
-                    }
-                } else {
-                    retourKO("Paramètres manquants", 404);
-                }
-            } else if (!isset($_SERVER["HTTP_KEY"])){
-                retourKO("Clé API manquante", 401);
-            } else {
-                retourKO("Clé API invalide", 403);
-            }
+            traitementUtilisateurInconnu($pdo, $infos);
         }
     } catch (Exception $e) {
         retourKO($e->getMessage(), 500);
     }
+
+    /**
+     * Traite la requête avec la méthode GET
+     * @param PDO $pdo l'objet PDO
+     * @param int $utilisateur l'utilisateur qui se connecte à la BD
+     * @param string[] $infos les informations transmises par l'URL
+     */
+    function traitementGET(PDO $pdo, int $utilisateur, array $infos) : void {
+        switch ($infos[0]) {
+            case "festivals":
+                sendJSON(getListeFestival($pdo, $utilisateur), 200);
+                break;
+            case "festival":
+                $festival = $infos[1];
+                if ($festival != null) {
+                    if (is_numeric($festival)){
+                        sendJSON(getDetailsFestival($pdo, (int) $festival), 200);
+                    } else {
+                        retourKO("Paramètre `idFestival` invalide", 400);
+                    }
+                } else {
+                    retourKO("Paramètre manquant", 404);
+                }
+                break;
+            default :
+                retourKO("Demande inconnue", 404);
+        }
+    }
+
+    /**
+     * Traite la requête avec la méthode POST
+     * @param PDO $pdo l'objet PDO
+     * @param int $utilisateur l'identifiant de l'utilisateur qui effectue la requête
+     * @param string[] $infos les informations transmises par l'URL
+     */
+    function traitementPOST(PDO $pdo, int $utilisateur, array $infos):void{
+        switch ($infos[0]) {
+            case 'ajoutFavori':
+                $requestBody = file_get_contents('php://input');
+                if ($requestBody == false){
+                    retourKO("Aucun favori n'a été transmis", 400);
+                } else {
+                    $donnees = json_decode($requestBody, true);
+                    $res = ajouterFavori($pdo, $utilisateur, $donnees['idFestival']);
+                    switch ($res) {
+                        case 0:
+                            retourOK("Favori ajouté", 201);
+                            break;
+                        case 1452:
+                            retourKO("Festival inexistant", 404);
+                            break;
+                        case 1062:
+                            retourKO("Favori déjà existant", 409);
+                            break;
+                        case 1292:
+                            retourKO("Données invalides", 400);
+                            break;
+                        default:
+                            retourKO("Erreur inconnue", 500);
+                    }
+                }
+                break;
+            default :
+                retourKO("Demande inconnue", 404);
+        }
+    }
+
+    /**
+     * Traite la requête avec la méthode DELETE
+     * @param PDO $pdo l'objet PDO
+     * @param int $utilisateur l'identifiant de l'utilisateur qui fait la requête
+     * @param string[] $infos les informations transmises par l'URL
+     */
+    function traitementDELETE(PDO $pdo, int $utilisateur, array $infos):void{
+        switch ($infos[0]) {
+            case "supprimerFavori":
+                $requestBody = file_get_contents('php://input');
+                if ($requestBody == false){
+                    retourKO("Aucun favori n'a été transmis", 400);
+                } else {
+                    $donnees = json_decode($requestBody, true);
+                    $res = supprimerFavori($pdo, $utilisateur, $donnees['idFestival']);
+                    switch($res) {
+                        case 0:
+                            retourOK("Favori supprimé", 200);
+                            break;
+                        case 1:
+                            retourKO("Favori inexistant", 404);
+                            break;
+                        case 1292:
+                            retourKO("Données invalides", 400);
+                            break;
+                        default:
+                            retourKO("Erreur inconnue", 500);
+                    }
+                }
+                break;
+            case "logout":
+                logout($pdo, $utilisateur);
+                retourOK("Déconnexion réussie", 200);
+                break;
+            default :
+                retourKO("Demande inconnue", 404);
+        }
+    }
+
+    /**
+     * Répond à la requête si l'utilisateur n'est pas reconnu
+     * @param PDO $pdo l'objet PDO
+     * @param string[] $infos les informations transmises par l'URL
+     */
+    function traitementUtilisateurInconnu(PDO $pdo, array $infos):void {
+        // Si l'utilisateur essaye de s'enregistrer
+        if ($infos[0] == "login" && $_SERVER['REQUEST_METHOD'] == 'GET') {
+            if (isset($infos[1]) && isset($infos[2])) {
+                // enregistre l'utilisateur si valide et renvoie sa clé API
+                $token = verifLoginPassword($pdo, $infos[1], $infos[2]);
+                if ($token != "erreur") {
+                    $retour['cle'] = $token;
+                    sendJSON($retour, 200);
+                } else {
+                    retourKO("Utilisateur inconnu", 404);
+                }
+            } else {
+                retourKO("Paramètres manquants", 404);
+            }
+        } else if (!isset($_SERVER["HTTP_KEY"])){
+            retourKO("Clé API manquante", 401);
+        } else {
+            retourKO("Clé API invalide", 403);
+        }
+    }
+

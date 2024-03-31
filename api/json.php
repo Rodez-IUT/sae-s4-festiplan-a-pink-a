@@ -1,17 +1,8 @@
 <?php
 
-$STATUS_CODE_SUCCESS = 200;
-$STATUS_CODE_CREATED = 201;
-$STATUS_CODE_BAD_REQUEST = 400;
-$STATUS_CODE_UNAUTHORIZED = 401;
-$STATUS_CODE_FORBIDDEN = 403;
-$STATUS_CODE_NOT_FOUND = 404;
-$STATUS_CODE_CONFLICT = 409;
-$STATUS_CODE_CREATED = 500;
-
 /**
  * Envoie des informations sous forme d'un document JSON
- * @param array $infos les informations à envoyer
+ * @param string[] $infos les informations à envoyer
  * @param int $codeRetour le code de retour à envoyer
  */
 function sendJSON(array $infos, int $codeRetour): void

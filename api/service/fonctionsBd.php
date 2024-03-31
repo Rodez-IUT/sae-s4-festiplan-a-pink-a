@@ -1,6 +1,6 @@
 <?php
 
-    function getPDO()
+    function getPDO() :PDO
     {
         // paramètres de connexion à la base de données
         $host = "SAE_S3_DevWeb_db";
@@ -21,15 +21,26 @@
         return new PDO($ds_name, $user, $pass, $options);
     }
 
-    function getListeFestival(PDO $pdo, int $idUtilisateur): array
+/**
+ * Renvoie la liste des festivals avec leurs infos, et s'ils sont en favoris ou non
+ * @param PDO $pdo l'objet PDO
+ * @param int $idUtilisateur l'identifiant de l'utilisateur dont on cherche à connaître les favoris
+ * @return string[] les informations des festivals
+ */
+function getListeFestival(PDO $pdo, int $idUtilisateur): array
     {
-        $stmt = $pdo->prepare("SELECT idFestival, titre, dateDebut, dateFin, (SELECT COUNT(*) FROM Favoris WHERE Favoris.idFestival = Festival.idFestival AND Favoris.idUtilisateur = :idUtilisateur) AS favori FROM Festival;");
+        $stmt = $pdo->prepare("
+            SELECT idFestival, titre, dateDebut, dateFin, (SELECT COUNT(*) 
+                                                           FROM Favoris 
+                                                           WHERE Favoris.idFestival = Festival.idFestival 
+                                                           AND Favoris.idUtilisateur = :idUtilisateur) AS favori 
+            FROM Festival;");
         $stmt->bindParam(':idUtilisateur', $idUtilisateur);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function verifLoginPassword(PDO $pdo, $login, $pass): string
+    function verifLoginPassword(PDO $pdo, string $login, string $pass): string
     {
         $stmt = $pdo->prepare("SELECT loginAPI(:login, :pass) as token");
         $stmt->bindParam(':login', $login);
@@ -38,7 +49,7 @@
         return $stmt->fetch(PDO::FETCH_ASSOC)['token'];
     }
 
-    function authApi(PDO $pdo, $token): bool|int
+    function authApi(PDO $pdo, string $token): int|false
     {
         $stmt = $pdo->prepare("SELECT idUtilisateur FROM ClesApi WHERE cleApi = :token");
         $stmt->bindParam(':token', $token);
@@ -50,16 +61,23 @@
         }
     }
 
-    function logout(PDO $pdo, $idUtilisateur): void
+    function logout(PDO $pdo, int $idUtilisateur): void
     {
         $stmt = $pdo->prepare("DELETE FROM ClesApi WHERE idUtilisateur = :idUtilisateur");
         $stmt->bindParam(':idUtilisateur', $idUtilisateur);
         $stmt->execute();
     }
 
-    function getDetailsFestival(PDO $pdo, $idFestival): array
+/**
+ * Récupère les informations d'un festival
+ * @param PDO $pdo l'objet PDO
+ * @param int $idFestival l'identifiant du festival à chercher
+ * @return string[] les informations du festival
+ */
+function getDetailsFestival(PDO $pdo, int $idFestival): array
     {
-        $stmt = $pdo->prepare("SELECT Festival.titre, Festival.dateDebut, Festival.dateFin, Festival.description, CategorieFestival.nom AS categorie
+        $stmt = $pdo->prepare("SELECT Festival.titre, Festival.dateDebut, Festival.dateFin, Festival.description, 
+                                            CategorieFestival.nom AS categorie
                                      FROM Festival 
                                      JOIN CategorieFestival
                                      ON Festival.categorie = CategorieFestival.idCategorie
@@ -87,7 +105,7 @@
         return $resultat;
     }
 
-    function ajouterFavori(PDO $pdo, $idUtilisateur, $idFestival): mixed
+    function ajouterFavori(PDO $pdo, int $idUtilisateur, int $idFestival): mixed
     {
         try {
             $stmt = $pdo->prepare("INSERT INTO Favoris (idUtilisateur, idFestival) VALUES (:idUtilisateur, :idFestival)");
@@ -96,11 +114,11 @@
             $stmt->execute();
             return 0;
         } catch (PDOException $e) {
-            return $e->errorInfo[1];
+            return $e -> errorInfo != null ? $e->errorInfo[1] : -1;
         }
     }
 
-    function supprimerFavori(PDO $pdo, $idUtilisateur, $idFestival): mixed
+    function supprimerFavori(PDO $pdo, int $idUtilisateur, int $idFestival): mixed
     {
         try {
             $stmt = $pdo->prepare("DELETE FROM Favoris WHERE idUtilisateur = :idUtilisateur AND idFestival = :idFestival");
@@ -113,11 +131,17 @@
                 return 0;
             }
         } catch (PDOException $e) {
-            return $e->errorInfo[1];
+            return $e -> errorInfo != null ? $e->errorInfo[1] : -1;
         }
     }
 
-    function getListeFavoris(PDO $pdo, $idUtilisateur): array
+/**
+ * Récupère la liste des favoris
+ * @param PDO $pdo l'objet PDO
+ * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut connaître les favoris
+ * @return string[] l'identifiant, titre et les dates des festivals en favori
+ */
+function getListeFavoris(PDO $pdo, int $idUtilisateur): array
     {
         $stmt = $pdo->prepare("SELECT idFestival, titre, dateDebut, dateFin 
                                      FROM Festival
