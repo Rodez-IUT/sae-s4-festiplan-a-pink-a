@@ -8,8 +8,8 @@
         $infos = explode('/', $_SERVER['REQUEST_URI']);
         // Vérifie la validité de la clé API et récupère l'utilisateur associé
         $utilisateur = authApi($pdo, $_SERVER["HTTP_KEY"] ?? 0);
-        // Suprime les 3 premiers arguments de l'URL
-        for ($i = 0; $i < 3; $i++) {
+        // Suprime les 2 premiers arguments de l'URL
+        for ($i = 0; $i < 2; $i++) {
             array_shift($infos);
         }
         // Si l'utilisateur est valide (la clé est valide)
@@ -62,7 +62,7 @@
                         switch ($infos[0]) {
                             case "supprimerFavori":
                                 $donnees = json_decode(file_get_contents('php://input'), true);
-                                $res = supprimerFavori($pdo, $utilisateur, $donnees['idFestival']);
+                                $res = supprimerFavori($pdo, $utilisateur, $infos[1]);
                                 switch($res) {
                                     case 0:
                                         retourOK("Favori supprimé", 200);

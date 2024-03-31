@@ -100,7 +100,7 @@
         }
     }
 
-    function supprimerFavori(PDO $pdo, $idUtilisateur, $idFestival): mixed
+    function supprimerFavori(PDO $pdo, int $idUtilisateur, int $idFestival): mixed
     {
         try {
             $stmt = $pdo->prepare("DELETE FROM Favoris WHERE idUtilisateur = :idUtilisateur AND idFestival = :idFestival");
