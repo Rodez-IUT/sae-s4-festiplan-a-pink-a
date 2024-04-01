@@ -1,13 +1,4 @@
 <?php
-    $STATUS_CODE_SUCCESS = 200;
-    $STATUS_CODE_CREATED = 201;
-    $STATUS_CODE_BAD_REQUEST = 400;
-    $STATUS_CODE_UNAUTHORIZED = 401;
-    $STATUS_CODE_FORBIDDEN = 403;
-    $STATUS_CODE_NOT_FOUND = 404;
-    $STATUS_CODE_CONFLICT = 409;
-    $STATUS_CODE_CREATED = 500;
-
     require_once('json.php');
     require_once('service/fonctionsBd.php');
     try {
@@ -17,8 +8,8 @@
         $infos = explode('/', $_SERVER['REQUEST_URI']);
         // Vérifie la validité de la clé API et récupère l'utilisateur associé
         $utilisateur = authApi($pdo, $_SERVER["HTTP_KEY"] ?? 0);
-        // Suprime les 3 premiers arguments de l'URL
-        for ($i = 0; $i < 3; $i++) {
+        // Suprime les 2 premiers arguments de l'URL (vide et "api")
+        for ($i = 0; $i < 2; $i++) {
             array_shift($infos);
         }
         // Si l'utilisateur est valide (la clé est valide)
