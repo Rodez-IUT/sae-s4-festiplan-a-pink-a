@@ -13,7 +13,8 @@
         "psr-4": {
             "controleurs\\": "controleurs",
             "modeles\\": "modeles",
-            "application\\": "application"
+            "application\\": "application",
+            "api\\": "api"
         }
     },
     "require": {
