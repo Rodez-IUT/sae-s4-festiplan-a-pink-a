@@ -21,14 +21,7 @@ class FestivalModele
         return $searchStmt;
     }
 
-    /**
-     * Vérifie qu'un utilisateur est organisateur OU responsable d'un festival
-     * @param PDO $pdo l'objet PDO
-     * @param int $idFestival l'identifiant du festival
-     * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut connaître les droits
-     * @return bool true si l'utilisateur a les droits d'organisateur, false sinon
-     */
-    public function estOrganisateur(PDO $pdo, int $idFestival, int $idUtilisateur) :bool {
+    public static function organisateur(PDO $pdo, int $idFestival, int $idUtilisateur) :bool {
         try {
             $requete = "SELECT idUtilisateur
                         FROM EquipeOrganisatrice
@@ -42,6 +35,17 @@ class FestivalModele
         } catch (PDOException $e) {
             return false;
         }
+    }
+
+    /**
+     * Vérifie qu'un utilisateur est organisateur OU responsable d'un festival
+     * @param PDO $pdo l'objet PDO
+     * @param int $idFestival l'identifiant du festival
+     * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut connaître les droits
+     * @return bool true si l'utilisateur a les droits d'organisateur, false sinon
+     */
+    public function estOrganisateur(PDO $pdo, int $idFestival, int $idUtilisateur) :bool {
+        self::organisateur($pdo, $idFestival, $idUtilisateur);
     }
 
     /**
