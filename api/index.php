@@ -116,19 +116,24 @@
                 if (!isset($infos[1])){
                     retourKO("Aucun favori n'a été transmis", 400);
                 } else {
-                    $res = supprimerFavori($pdo, $utilisateur, $infos[1]);
-                    switch($res) {
-                        case 0:
-                            retourOK("Favori supprimé", 200);
-                            break;
-                        case 1:
-                            retourKO("Favori inexistant", 404);
-                            break;
-                        case 1292:
-                            retourKO("Données invalides", 400);
-                            break;
-                        default:
-                            retourKO("Erreur inconnue", 500);
+                    $festival = $infos[1];
+                    if (!is_numeric($festival)) {
+                        retourKO("Paramètre invalide", 400);
+                    } else {
+                        $res = supprimerFavori($pdo, $utilisateur, (int) $festival);
+                        switch($res) {
+                            case 0:
+                                retourOK("Favori supprimé", 200);
+                                break;
+                            case 1:
+                                retourKO("Favori inexistant", 404);
+                                break;
+                            case 1292:
+                                retourKO("Données invalides", 400);
+                                break;
+                            default:
+                                retourKO("Erreur inconnue", 500);
+                        }
                     }
                 }
                 break;
