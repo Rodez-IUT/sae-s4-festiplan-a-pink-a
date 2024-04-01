@@ -113,12 +113,10 @@
     function traitementDELETE(PDO $pdo, int $utilisateur, array $infos):void{
         switch ($infos[0]) {
             case "supprimerFavori":
-                $requestBody = file_get_contents('php://input');
-                if ($requestBody == false){
+                if (!isset($infos[1])){
                     retourKO("Aucun favori n'a été transmis", 400);
                 } else {
-                    $donnees = json_decode($requestBody, true);
-                    $res = supprimerFavori($pdo, $utilisateur, $donnees['idFestival']);
+                    $res = supprimerFavori($pdo, $utilisateur, $infos[1]);
                     switch($res) {
                         case 0:
                             retourOK("Favori supprimé", 200);
