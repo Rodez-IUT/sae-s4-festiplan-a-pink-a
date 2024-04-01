@@ -1,12 +1,13 @@
 /.metadata/
+/static/bootstrap-4.6.2-dist/
+/static/fontawesome-free-6.2.1-web/
 Bin
 .classpath
 .project
 .settings
 .DS_Store
-/festiplan/static/bootstrap-4.6.2-dist/
-/festiplan/static/fontawesome-free-6.2.1-web/
 /bin/
+/.idea/
 vendor
 .vscode
 .idea/
