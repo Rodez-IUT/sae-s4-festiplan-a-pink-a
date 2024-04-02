@@ -41,8 +41,12 @@ class FestivalControleur {
         session_start();
         // Récupere tout les parametre d'un festival
         $nom = HttpHelper::getParam('nom');
+        $nom = htmlSpecialChars($nom);
         $description = HttpHelper::getParam('description');
+        $description = htmlSpecialChars($description);
+
         $dateDebut = HttpHelper::getParam('dateDebut');
+        
         $dateFin = HttpHelper::getParam('dateFin');
         $categorie = HttpHelper::getParam('categorie');
         $img = "aaa";
@@ -299,6 +303,7 @@ class FestivalControleur {
         $pageActuelle = (int) HttpHelper::getParam('pageActuelle');
         // Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
+        $recherche = htmlSpecialChars($recherche)
         // Ajoute le nouveau spectacle
         $this->festivalModele->majSpectacleDeFestival($pdo,$idFestival,$idSpectacle);
 
