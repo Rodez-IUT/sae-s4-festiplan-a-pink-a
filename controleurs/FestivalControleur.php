@@ -41,9 +41,9 @@ class FestivalControleur {
         session_start();
         // Récupere tout les parametre d'un festival
         $nom = HttpHelper::getParam('nom');
-        $nom = htmlSpecialChars($nom);
+        $nom = htmlspecialchars($nom);
         $description = HttpHelper::getParam('description');
-        $description = htmlSpecialChars($description);
+        $description = htmlspecialchars($description);
 
         $dateDebut = HttpHelper::getParam('dateDebut');
         
@@ -85,7 +85,11 @@ class FestivalControleur {
             // Insere ce festival dans la base de données ou le modifie selon la valeur de $modifier
             if ($modifier == 'true') {
                 $idFestival = HttpHelper::getParam('idFestival');
-                $modification = $this->festivalModele->modificationFestival($pdo, $nom, $description, $dateDebut, $dateFin, $categorie, $img, $idFestival);
+                if ($this -> festivalModele -> estOrganisateur($pdo, $idFestival, $idOrganisateur)) {
+                    $modification = $this->festivalModele->modificationFestival($pdo, $nom, $description, $dateDebut, $dateFin, $categorie, $img, $idFestival);
+                } else {
+                    $this -> goBackHomeYouDontHaveTheRights();
+                }
             } else {
                 $insertion = $this->festivalModele->insertionFestival($pdo, $nom, $description, $dateDebut, $dateFin, $categorie, $img, $idOrganisateur);
             }
@@ -104,7 +108,7 @@ class FestivalControleur {
                 $estResponsable = $this->festivalModele->estResponsable($pdo,$idFestival,$idOrganisateur);
                 $listeOrganisateur = $this->festivalModele->listeOrganisateurFestival($pdo,$idFestival);
                 $vue = new View("vues/vue_modifier_festival");
-                $vue->setVar("estResponsable", $estResponsable['responsable']);
+                $vue->setVar("estResponsable", $estResponsable);
                 $vue->setVar("listeOrganisateur", $listeOrganisateur);
             } else {
                 $vue = new View("vues/vue_creer_festival");
@@ -148,7 +152,7 @@ class FestivalControleur {
         $vue->setVar("ancienneCategorie", $festivalAModifier['categorie']);
         $vue->setVar("idFestival", $idFestival);
         $vue->setVar("searchStmt",$searchStmt);
-        $vue->setVar("estResponsable", $estResponsable['responsable']);
+        $vue->setVar("estResponsable", $estResponsable);
         $vue->setVar("listeOrganisateur", $listeOrganisateur);
         return $vue;
     }
@@ -264,7 +268,9 @@ class FestivalControleur {
 
 
     public function modifierListeSpectacleFestival(PDO $pdo) : View {
+        $idUtilisateur = $_SESSION['id_utilisateur'];
         $idFestival = HttpHelper::getParam('idFestival');
+        if ($this -> festivalModele -> estOrganisateur($pdo, $idFestival, $idUtilisateur)) {
         // On détermine sur quelle page on se trouve
         if(isset($_GET['page']) && !empty($_GET['page'])){
             $pageActuelle = (int) strip_tags($_GET['page']);
@@ -293,72 +299,83 @@ class FestivalControleur {
         $vue->setVar("listeSpectacles", $listeSpectacles);
         $vue->setVar("derniereRecherche", $recherche);
         return $vue;
+        }
+        $this -> goBackHomeYouDontHaveTheRights();
     }
 
     public function ajouterSpectacleDeFestival(PDO $pdo) : View {
+        $idUtilisateur = $_SESSION['id_utilisateur'];
         $idFestival = HttpHelper::getParam('idFestival');
+        if ($this -> festivalModele -> estOrganisateur($pdo, $idFestival, $idUtilisateur)) {
         // Récupere le spectacle check
         $idSpectacle = HttpHelper::getParam('spectacle');
         // On récupere sur quelle page on se trouve
         $pageActuelle = (int) HttpHelper::getParam('pageActuelle');
         // Recupere la recherche
         $recherche =  HttpHelper::getParam('derniereRecherche');
-        $recherche = htmlSpecialChars($recherche)
+        $recherche = htmlspecialchars($recherche);
         // Ajoute le nouveau spectacle
         $this->festivalModele->majSpectacleDeFestival($pdo,$idFestival,$idSpectacle);
 
-        $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
-        // On calcule le nombre de pages total
-        $nbPages = ceil($nbSpectacles / 4);
-        // Calcul du 1er element de la page
-        $premier = ($pageActuelle * 4) - 4;
-        $listeSpectacles = $this->spectacleModele->listeSpectacles($pdo,$premier,$recherche);
-        $listeSpectacleDeFestival = $this->festivalModele->listeSpectacleDeFestival($pdo,$idFestival);
+            $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo, $recherche);
+            // On calcule le nombre de pages total
+            $nbPages = ceil($nbSpectacles / 4);
+            // Calcul du 1er element de la page
+            $premier = ($pageActuelle * 4) - 4;
+            $listeSpectacles = $this->spectacleModele->listeSpectacles($pdo, $premier, $recherche);
+            $listeSpectacleDeFestival = $this->festivalModele->listeSpectacleDeFestival($pdo, $idFestival);
 
-        $vue = new View("vues/vue_ajouter_spectacle");
-        $vue->setVar("idFestival", $idFestival);
-        $vue->setVar("nbPages",$nbPages);
-        $vue->setVar("pageActuelle",$pageActuelle);
-        $vue->setVar("listeSpectacleDeFestival", $listeSpectacleDeFestival);
-        $vue->setVar("listeSpectacles", $listeSpectacles);
-        $vue->setVar("derniereRecherche", $recherche);
-        return $vue;
+            $vue = new View("vues/vue_ajouter_spectacle");
+            $vue->setVar("idFestival", $idFestival);
+            $vue->setVar("nbPages", $nbPages);
+            $vue->setVar("pageActuelle", $pageActuelle);
+            $vue->setVar("listeSpectacleDeFestival", $listeSpectacleDeFestival);
+            $vue->setVar("listeSpectacles", $listeSpectacles);
+            $vue->setVar("derniereRecherche", $recherche);
+            return $vue;
+        }
+        $this -> goBackHomeYouDontHaveTheRights();
     }
     
     public function supprimerSpectacleDeFestival (PDO $pdo) : View {
         $idFestival = HttpHelper::getParam('idFestival');
-        // Récupere le spectacle checks
-        $idSpectacle = HttpHelper::getParam('spectacle');
-        // On récupere sur quelle page on se trouve
-        $pageActuelle = (int) HttpHelper::getParam('pageActuelle');
-        // Recupere la recherche
-        $recherche =  HttpHelper::getParam('derniereRecherche');
+        $idUtilisateur = $_SESSION['id_utilisateur'];
+        if ($this -> festivalModele -> estOrganisateur($pdo, $idFestival, $idUtilisateur)){
+            // Récupere le spectacle checks
+            $idSpectacle = HttpHelper::getParam('spectacle');
+            // On récupere sur quelle page on se trouve
+            $pageActuelle = (int) HttpHelper::getParam('pageActuelle');
+            // Recupere la recherche
+            $recherche =  HttpHelper::getParam('derniereRecherche');
+            $recherche = htmlspecialchars($recherche);
 
-        // Supprime le spectacle
-        $this->festivalModele->supprimerSpectacleDeFestival($pdo,$idFestival,$idSpectacle);
-        $nbSpectacles = (int) $this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
-        // On calcule le nombre de pages total
-        $nbPages = ceil($nbSpectacles / 4);
-        // Calcul du 1er element de la page
-        $premier = ($pageActuelle * 4) - 4;
-        $listeSpectacles = $this->spectacleModele->listeSpectacles($pdo,$premier,$recherche);
-        $listeSpectacleDeFestival = $this->festivalModele->listeSpectacleDeFestival($pdo,$idFestival);
+            // Supprime le spectacle
+            $this->festivalModele->supprimerSpectacleDeFestival($pdo,$idFestival,$idSpectacle);
+            $nbSpectacles = (int) $this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
+            // On calcule le nombre de pages total
+            $nbPages = ceil($nbSpectacles / 4);
+            // Calcul du 1er element de la page
+            $premier = ($pageActuelle * 4) - 4;
+            $listeSpectacles = $this->spectacleModele->listeSpectacles($pdo,$premier,$recherche);
+            $listeSpectacleDeFestival = $this->festivalModele->listeSpectacleDeFestival($pdo,$idFestival);
 
-        $vue = new View("vues/vue_ajouter_spectacle");
-        $vue->setVar("idFestival", $idFestival);
-        $vue->setVar("nbPages",$nbPages);
-        $vue->setVar("pageActuelle",$pageActuelle);
-        $vue->setVar("listeSpectacleDeFestival", $listeSpectacleDeFestival);
-        $vue->setVar("listeSpectacles", $listeSpectacles);
-        $vue->setVar("derniereRecherche", $recherche);
-        return $vue;
+            $vue = new View("vues/vue_ajouter_spectacle");
+            $vue->setVar("idFestival", $idFestival);
+            $vue->setVar("nbPages",$nbPages);
+            $vue->setVar("pageActuelle",$pageActuelle);
+            $vue->setVar("listeSpectacleDeFestival", $listeSpectacleDeFestival);
+            $vue->setVar("listeSpectacles", $listeSpectacles);
+            $vue->setVar("derniereRecherche", $recherche);
+            return $vue;
+        }
+        $this -> goBackHomeYouDontHaveTheRights();
     }
 
     public function rechercheSpectacle (PDO $pdo) : View {
         $idFestival = HttpHelper::getParam('idFestival');
         // On récupere sur quelle page on se trouve
         $recherche =  HttpHelper::getParam('recherche');
-
+        $recherche = htmlspecialchars($recherche);
         $nbSpectacles = (int)$this->spectacleModele->nombreSpectaclesRecherche($pdo,$recherche);
         // On calcule le nombre de pages total
         $nbPages = ceil($nbSpectacles / 4);
@@ -375,6 +392,11 @@ class FestivalControleur {
         $vue->setVar("listeSpectacles", $listeSpectacles);
         $vue->setVar("derniereRecherche", $recherche);
         return $vue;
+    }
+
+    public function goBackHomeYouDontHaveTheRights():never{
+        header("Location: index.php");
+        exit();
     }
 
 }

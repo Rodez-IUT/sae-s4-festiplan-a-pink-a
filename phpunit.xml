@@ -16,16 +16,16 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit bootstrap="lib/vendor/autoload.php">
     <testsuites>
         <testsuite name="default test suit">
-            <directory>tests</directory>
+            <directory>api/service/test</directory>
         </testsuite>
     </testsuites>
 
     <coverage>
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">api/service</directory>
         </include>
     </coverage>
 </phpunit>

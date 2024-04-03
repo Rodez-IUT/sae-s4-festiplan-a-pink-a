@@ -49,6 +49,10 @@ class SpectacleControleur {
         $duree = HttpHelper::getParam('duree');
         $categorie = HttpHelper::getParam('categorie');
         $taille = HttpHelper::getParam('taille');
+
+        $titre = htmlspecialchars($titre);
+        $description = htmlspecialchars($description);
+        
         $illustration = 'aaa';
 
         // Récupere true si on modifier un spectalce, false si on en créer un
@@ -237,6 +241,11 @@ class SpectacleControleur {
         $nom = HttpHelper::getParam('nom');
         $prenom = HttpHelper::getParam('prenom');
         $mail = HttpHelper::getParam('email');
+
+        $nom = htmlspecialchars($nom);
+        $prenom = htmlspecialchars($prenom);
+        $mail = htmlspecialchars($email);
+
         $surScene = HttpHelper::getParam('categorieIntervenant');
         $typeIntervenant = HttpHelper::getParam('metierIntervenant');
 

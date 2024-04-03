@@ -2,6 +2,7 @@
 
 namespace controleurs;
 
+use modeles\FestivalModele;
 use PDO;
 use PDOStatement;
 use DateTime;
@@ -36,20 +37,23 @@ class GrijControleur
     public function index(PDO $pdo)
     {
         $idFestival = HttpHelper::getParam('idFestival');
+        $idUtilisateur = $_SESSION['id_utilisateur'];
+        if (FestivalModele::organisateur($pdo, $idFestival, $idUtilisateur)){
+            $vue = new View('vues/vue_parametres_grij');
+            $message = null;
+            $stmt = $this->grijModele->recupererParametresGrij($pdo, $idFestival);
+            $row = $stmt->fetch();
+            if ($row) {
+                $vue->setVar('heureDebut', $row['heureDebut']);
+                $vue->setVar('heureFin', $row['heureFin']);
+                $vue->setVar('ecartEntreSpectacles', $row['tempsEntreSpectacle']);
+            }
 
-        $vue = new View('vues/vue_parametres_grij');
-        $message = null;
-        $stmt = $this->grijModele->recupererParametresGrij($pdo, $idFestival);
-        $row = $stmt->fetch();
-        if ($row) {
-            $vue->setVar('heureDebut', $row['heureDebut']);
-            $vue->setVar('heureFin', $row['heureFin']);
-            $vue->setVar('ecartEntreSpectacles', $row['tempsEntreSpectacle']);
+            $vue->setVar('message', $message);
+            $vue->setVar('idFestival', $idFestival);
+            return $vue;
         }
-
-        $vue->setVar('message', $message);
-        $vue->setVar('idFestival', $idFestival);
-        return $vue;
+        $this->goBackHomeYouDontHaveTheRights();
     }
 
     /**
@@ -59,62 +63,67 @@ class GrijControleur
      */
     public function enregistrerGrij(PDO $pdo)
     {
-        $message = null;
-        // Récupération des données du lien.
         $idFestival = HttpHelper::getParam('idFestival');
-        $heureDebut = HttpHelper::getParam('heureDebut');
-        $heureFin = HttpHelper::getParam('heureFin');
-        $ecartEntreSpectacles =HttpHelper::getParam('ecartEntreSpectacles');
+        $idUtilisateur = $_SESSION['id_utilisateur'];
+        if (FestivalModele::organisateur($pdo, $idFestival, $idUtilisateur)) {
+            $message = null;
+            // Récupération des données du lien.
+            $idFestival = HttpHelper::getParam('idFestival');
+            $heureDebut = HttpHelper::getParam('heureDebut');
+            $heureFin = HttpHelper::getParam('heureFin');
+            $ecartEntreSpectacles =HttpHelper::getParam('ecartEntreSpectacles');
 
-        // Vérification de la cohérence des données.
-        if ($heureDebut == null || $heureFin == null || $ecartEntreSpectacles == null){
-            $vue = new View('vues/vue_parametres_grij');
-            $message = "Vous n'avez pas entré tous les champs";
-            $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
+            // Vérification de la cohérence des données.
+            if ($heureDebut == null || $heureFin == null || $ecartEntreSpectacles == null){
+                $vue = new View('vues/vue_parametres_grij');
+                $message = "Vous n'avez pas entré tous les champs";
+                $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
 
-        } else if (strtotime($heureDebut)> strtotime($heureFin)) {
-            $vue = new View('vues/vue_parametres_grij');
-            $message = "La date de fin est plus petite que celle de début.<br>Il faut entrer une date de fin plus grande";
-            $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
-        
-        } else if ($this->convertirEnMinutes($ecartEntreSpectacles)
-          >= ($this->convertirEnMinutes($heureFin) - $this->convertirEnMinutes($heureDebut))) {
-            $vue = new View('vues/vue_parametres_grij');
-            $message = "L'écart entre les spectacles est supérieur à la durée totale";
-            $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
-        
-        } else {
-            // Si les données sont cohérentes
-            // On modifie la grij
-            $ok = $this->grijModele->modifierCreerGrij($pdo, $idFestival, $heureDebut, $heureFin, $ecartEntreSpectacles);
-            // Si la modification c'est bien effectuter
-            if ($ok){
-                // Récupération des jours du festival
-                $jours = $this->grijModele->recupererJours($pdo, $idFestival);
-                // Récupération des spectacles
-                $spectacles = $this->grijModele->recupererSpectacles($pdo, $idFestival);
-                // création de la grille d'affichage
-                $this->planifierSpectacles($pdo, $idFestival,$spectacles,$heureDebut, $heureFin, $ecartEntreSpectacles, $jours);
+            } else if (strtotime($heureDebut)> strtotime($heureFin)) {
+                $vue = new View('vues/vue_parametres_grij');
+                $message = "La date de fin est plus petite que celle de début.<br>Il faut entrer une date de fin plus grande";
+                $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
 
-                // récupération de la grij
-                $grij = $this->grijModele->recupererGrij($pdo, $idFestival);
-                $spectacleNonPlace = $this->grijModele->recupererSpectacleNonPlace($pdo,$idFestival);
-
-                $vue = new View('vues/vue_consultation_planification');
-                $vue->setVar('listeSpectacleNonPlace', $spectacleNonPlace);
-                $vue->setVar('listeJours', $grij);
+            } else if ($this->convertirEnMinutes($ecartEntreSpectacles)
+              >= ($this->convertirEnMinutes($heureFin) - $this->convertirEnMinutes($heureDebut))) {
+                $vue = new View('vues/vue_parametres_grij');
+                $message = "L'écart entre les spectacles est supérieur à la durée totale";
+                $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
 
             } else {
-                // réaffichage des paramétrage en cas d'erreur
-                $vue = new View('vues/vue_parametres_grij');
-                $message = "Erreur avec la base de données.";
-                $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
+                // Si les données sont cohérentes
+                // On modifie la grij
+                $ok = $this->grijModele->modifierCreerGrij($pdo, $idFestival, $heureDebut, $heureFin, $ecartEntreSpectacles);
+                // Si la modification c'est bien effectuter
+                if ($ok){
+                    // Récupération des jours du festival
+                    $jours = $this->grijModele->recupererJours($pdo, $idFestival);
+                    // Récupération des spectacles
+                    $spectacles = $this->grijModele->recupererSpectacles($pdo, $idFestival);
+                    // création de la grille d'affichage
+                    $this->planifierSpectacles($pdo, $idFestival,$spectacles,$heureDebut, $heureFin, $ecartEntreSpectacles, $jours);
+
+                    // récupération de la grij
+                    $grij = $this->grijModele->recupererGrij($pdo, $idFestival);
+                    $spectacleNonPlace = $this->grijModele->recupererSpectacleNonPlace($pdo,$idFestival);
+
+                    $vue = new View('vues/vue_consultation_planification');
+                    $vue->setVar('listeSpectacleNonPlace', $spectacleNonPlace);
+                    $vue->setVar('listeJours', $grij);
+
+                } else {
+                    // réaffichage des paramétrage en cas d'erreur
+                    $vue = new View('vues/vue_parametres_grij');
+                    $message = "Erreur avec la base de données.";
+                    $this->initialiseHeuresSelectionnees($vue, $heureDebut, $heureFin, $ecartEntreSpectacles);
+                }
             }
+            $vue->setVar('profilSpectacle', null);
+            $vue->setVar('idFestival', $idFestival);
+            $vue->setVar('message', $message);
+            return $vue;
         }
-        $vue->setVar('profilSpectacle', null);
-        $vue->setVar('idFestival', $idFestival);
-        $vue->setVar('message', $message);
-        return $vue;
+        $this->goBackHomeYouDontHaveTheRights();
     }
 
     /**
@@ -266,12 +275,17 @@ class GrijControleur
      * @param int $minutes La valeur en minute à convertir en heures.
      * @return string Le résultat en heure compatible au type TIME en mySQL.
      */
-    public function convertirMinutesEnHeuresMySQL(int $minutes) {
+    private function convertirMinutesEnHeuresMySQL(int $minutes) {
         $heures = floor($minutes / 60);
         $minutesRestantes = $minutes % 60;
         $tempsFormate = new DateTime("1970-01-01 $heures:$minutesRestantes:00");
         $tempsMySQL = $tempsFormate->format('H:i:s');
         
         return $tempsMySQL;
+    }
+
+    public function goBackHomeYouDontHaveTheRights():never{
+        header("Location: index.php");
+        exit();
     }
 }

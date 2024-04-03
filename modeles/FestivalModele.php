@@ -21,14 +21,7 @@ class FestivalModele
         return $searchStmt;
     }
 
-    /**
-     * Vérifie les droits d'un organisateur sur un festival
-     * @param PDO $pdo l'objet PDO
-     * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut vérifier les droits
-     * @param int $idFestival l'identifiant du festival à vérifier
-     * @return int|null 1 si l'utilisateur est responsable, 1 s'il est organisateur, null s'il n'a aucun droit
-     */
-    public function verifierDroitSurFestival(PDO $pdo, int $idUtilisateur, int $idFestival) :int|null {
+    public static function organisateur(PDO $pdo, int $idFestival, int $idUtilisateur) :bool {
         try {
             $requete = "SELECT idUtilisateur
                         FROM EquipeOrganisatrice
@@ -38,45 +31,41 @@ class FestivalModele
             $stmt -> bindValue("user", $idUtilisateur);
             $stmt -> bindValue("festival", $idFestival);
             $stmt -> execute();
-            return $stmt -> fetch();
+            return ($stmt -> rowCount()) > 0;
         } catch (PDOException $e) {
-            return null;
+            return false;
         }
     }
 
-    public int $DROIT_RESPONSABLE = 1;
-    public int $DROIT_ORGANISATEUR = 0;
-    public ?int $DROIT_AUCUN = null;
-
     /**
-     * @param PDO $pdo
-     * @param int $idFestival
-     * @param int $idUtilisateur
-     * @return bool
+     * Vérifie qu'un utilisateur est organisateur OU responsable d'un festival
+     * @param PDO $pdo l'objet PDO
+     * @param int $idFestival l'identifiant du festival
+     * @param int $idUtilisateur l'identifiant de l'utilisateur dont on veut connaître les droits
+     * @return bool true si l'utilisateur a les droits d'organisateur, false sinon
      */
-    public function estOrganisateur(PDO $pdo, int $idFestival, int $idUtilisateur) :bool {
-        return $this->verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival) !== $this->DROIT_AUCUN;
+    public function estOrganisateur(PDO $pdo,  $idFestival, $idUtilisateur) {
+        return self::organisateur($pdo, $idFestival, $idUtilisateur);
     }
 
-    /*
-    public function estResponsable(PDO $pdo, int $idUtilisateur, int $idFestival) :bool {
-        return $this->verifierDroitSurFestival($pdo, $idUtilisateur, $idFestival) == $this->DROIT_RESPONSABLE;
-    }*/
-
     /**
-     * Regarde si l'utilisateur et le responsable du festival voulus.
+     * Regarde si l'utilisateur est le responsable du festival voulus.
      * @param PDO $pdo un objet PDO connecté à la base de données.
      * @param int $idFestival l'id du festival.
      * @param int $idOrganisateur l'id de l'organisateur.
+     * @return bool true si l'utilisateur est responsable du festival, false sinon
      */
-    public function estResponsable($pdo,$idFestival,$idOrganisateur)
+    public function estResponsable($pdo, $idFestival, $idOrganisateur):bool
     {
-        $sql = "SELECT responsable FROM EquipeOrganisatrice WHERE idFestival =:idFestival AND idUtilisateur =:idUtilisateur";
+        $sql = "SELECT responsable 
+                FROM EquipeOrganisatrice 
+                WHERE idFestival =:idFestival 
+                AND idUtilisateur =:idUtilisateur";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam("idFestival",$idFestival);
         $stmt->bindParam("idUtilisateur",$idOrganisateur);
         $stmt->execute();
-        $fetch = $stmt->fetch();
+        $fetch = $stmt->fetch()["responsable"] == 1;
         return $fetch;
     }
 
@@ -94,7 +83,8 @@ class FestivalModele
     public function insertionFestival(PDO $pdo, string $nom, string $description, string $dateDebut, string $dateFin,
                                       string $categorie, string $illustration, int $idOrganisateur)
     {
-        $sql = "INSERT INTO Festival (titre,categorie,description,dateDebut,dateFin,illustration) VALUES (:leNom,:laCate,:laDesc,:leDeb,:laFin,:lIllu)";
+        $sql = "INSERT INTO Festival (titre,categorie,description,dateDebut,dateFin,illustration) 
+                VALUES (:leNom,:laCate,:laDesc,:leDeb,:laFin,:lIllu)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":leNom", $nom);
         $stmt->bindParam(":laCate", $categorie);

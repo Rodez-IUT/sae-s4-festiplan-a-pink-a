@@ -26,7 +26,9 @@ class UtilisateurCompteControleur
     public function connexion($pdo) {
         $verifLoginOuMdp = true;
         $login = HttpHelper::getParam('login');
+        $login = htmlspecialchars($login);
         $mdp = HttpHelper::getParam('mdp');
+        $mdp = htmlspecialchars($mdp);
         $searchStmt = $this->userModele->trouverCompteUtilisateurParLoginMdp($pdo, $login, $mdp);
         $user = $searchStmt->fetch();
         if (!$user){
@@ -89,6 +91,13 @@ class UtilisateurCompteControleur
         $login = HttpHelper::getParam('login');
         $mdp = HttpHelper::getParam('mdp');
         $confirmMdp = HttpHelper::getParam('confirmMdp');
+
+        $nom = htmlspecialchars($nom);
+        $prenom = htmlspecialchars($prenom);
+        $email = htmlspecialchars($email);
+        $login = htmlspecialchars($login);
+        $mdp = htmlspecialchars($mdp);
+        $confirmMdp = htmlspecialchars($confirmMdp);
 
         $verifNom = (strlen($nom) <= 35);
         $verifPrenom = (strlen($prenom) <= 30);
@@ -179,6 +188,10 @@ class UtilisateurCompteControleur
         session_start();
         $login = HttpHelper::getParam('login');
         $mdp = HttpHelper::getParam('mdp');
+
+        $login = htmlspecialchars($login);
+        $mdp = htmlspecialchars($mdp);
+
         $utilisateur = $this->userModele->recupererInformationsProfil($pdo, $_SESSION['id_utilisateur']);
         $utilisateur = $utilisateur->fetch();
         if ($login === $utilisateur['login'] && $mdp == $utilisateur['mdp']) {
@@ -221,6 +234,13 @@ class UtilisateurCompteControleur
         $email = HttpHelper::getParam('email');
         $ancienMdp = HttpHelper::getParam('ancienMdp');
 
+        $nom = htmlspecialchars($nom);
+        $prenom = htmlspecialchars($prenom);
+        $login = htmlspecialchars($login);
+        $mdp = htmlspecialchars($mdp);
+        $confirmMdp = htmlspecialchars($confirmMdp);
+        $email = htmlspecialchars($email);
+        $ancienMdp = htmlspecialchars($ancienMdp);
         // Initialisez les variables à true
         $verifNom = true;
         $verifPrenom = true;
